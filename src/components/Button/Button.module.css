@@ -1,0 +1,22 @@
+.btn {
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.05s ease-out;
+}
+
+    .btn:active {
+        transform: translateY(1px);
+    }
+
+.primary {
+    background: #0f172a;
+    color: #fff;
+}
+
+.ghost {
+    background: transparent;
+    color: #0f172a;
+}
