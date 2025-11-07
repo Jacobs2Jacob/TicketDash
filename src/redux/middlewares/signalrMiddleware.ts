@@ -28,7 +28,7 @@ export const signalrMiddleware: Middleware = (store) => {
             try {
                 const token = localStorage.getItem('accessToken') ?? '';
                 connection = new signalR.HubConnectionBuilder()
-                    .withUrl('http://localhost:5000/hubs/tickets', {
+                    .withUrl('http://localhost:7180/hubs/tickets', {
                         accessTokenFactory: () => token,
                     })
                     .withAutomaticReconnect()

@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React from 'react';
 import type { Ticket } from '@/entities/ticket';
 import styles from './TicketRow.module.css';
 
@@ -15,19 +15,21 @@ const priorityClass = (p: Ticket['priority']) => {
     }
 };
 
-const TicketRow = forwardRef<HTMLDivElement, { ticket: Ticket }>(
-    ({ ticket }, ref) => {
+interface TicketProps {
+    ticket: Ticket;
+}
+
+const TicketRow = (props: TicketProps) => {
         return (
-            <div ref={ref} className={styles.row}>
-                <div>{ticket.title}</div>
-                <div className={styles.desc}>{ticket.description}</div>
-                <div className={`${styles.badge} ${priorityClass(ticket.priority)}`}>
-                    {ticket.priority}
+            <div className={styles.row}>
+                <div>{props.ticket.title}</div>
+                <div className={styles.desc}>{props.ticket.description}</div>
+                <div className={`${styles.badge} ${priorityClass(props.ticket.priority)}`}>
+                    {props.ticket.priority}
                 </div>
-                <div>{ticket.status}</div>
+                <div>{props.ticket.status}</div>
             </div>
         );
     }
-);
 
-export default TicketRow;
+export default React.memo(TicketRow);
