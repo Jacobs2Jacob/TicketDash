@@ -1,10 +1,8 @@
 
 
-const TicketFilters = () => {
-    // for now just placeholder, can sync with URL later
+const TicketFilters = () => { 
     return (
         <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem' }}>
-            <input placeholder="Search…" />
             <select>
                 <option value="">All statuses</option>
                 <option value="Open">Open</option>

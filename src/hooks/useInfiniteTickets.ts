@@ -1,9 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { ticketApi } from '@/services/api/ticketApi';
-import type { Ticket } from '@/entities/ticket'; 
+import type { Ticket } from '@/entities/ticket';
+import { useMemo } from 'react';
 
 export const useInfiniteTickets = () => {
-    const pageSize = 50;
+    const pageSize = 30;
 
     const {
         data,
@@ -21,17 +22,18 @@ export const useInfiniteTickets = () => {
                 sort: 'updatedAt_desc',
             }),
         getNextPageParam: (lastPage, allPages) => {
-            const totalLoaded = allPages.reduce(
-                (sum, page) => sum + page.length,
-                0
-            );
-            return totalLoaded >= lastPage.length ? undefined : allPages.length + 1;
+            if (lastPage.length < pageSize) {
+                return undefined;
+            }
+
+            return allPages.length + 1;
         },
         initialPageParam: 1,
     });
 
-    // Flatten all ticket arrays
-    const tickets = data?.pages.flatMap((page) => page) ?? [];
+    const tickets = useMemo(() => {
+        return data?.pages.flatMap((page) => page) ?? [];
+    }, [data]);
 
     return {
         tickets,

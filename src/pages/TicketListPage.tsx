@@ -4,7 +4,7 @@ import TicketFilters from './TicketFilters';
 const TicketListPage = () => {
     return (
         <div>
-            <TicketFilters />
+            <TicketFilters /> 
             <TicketList />
         </div>
     );

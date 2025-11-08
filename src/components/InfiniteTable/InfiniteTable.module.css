@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: grid;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-bottom: 1px solid #ddd;
+    background: #f8f8f8;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.scrollable {
+    flex: 1;
+    overflow: auto;
+}
+
+.row {
+    display: grid;
+    padding: 8px 16px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+    .row:hover {
+        background: #fafafa;
+    }
