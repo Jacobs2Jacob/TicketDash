@@ -28,6 +28,7 @@ const ticketsSlice = createSlice({
         },
         ticketsReceived(state, action: PayloadAction<Ticket[]>) {
             ticketsAdapter.setAll(state, action.payload);
+
             // update latestSeenUpdatedAt
             for (const t of action.payload) {
                 if (!state.latestSeenUpdatedAt || t.updatedAt > state.latestSeenUpdatedAt) {
@@ -41,6 +42,7 @@ const ticketsSlice = createSlice({
         // CREATE
         ticketAdded(state, action: PayloadAction<Ticket>) {
             ticketsAdapter.addOne(state, action.payload);
+
             if (
                 !state.latestSeenUpdatedAt ||
                 action.payload.updatedAt > state.latestSeenUpdatedAt
@@ -52,6 +54,7 @@ const ticketsSlice = createSlice({
         // UPDATE
         ticketUpdated(state, action: PayloadAction<Ticket>) {
             ticketsAdapter.upsertOne(state, action.payload);
+
             if (
                 !state.latestSeenUpdatedAt ||
                 action.payload.updatedAt > state.latestSeenUpdatedAt

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './InfiniteTable.module.css';
 import { InfiniteTableHeader } from './InfiniteTableHeader';
@@ -7,6 +7,7 @@ export interface Column {
     key: string;
     label: string;
     width?: string;
+    styles?: CSSProperties;
 }
 
 interface InfiniteTableProps {

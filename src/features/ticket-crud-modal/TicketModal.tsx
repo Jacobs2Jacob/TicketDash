@@ -1,120 +1,138 @@
-﻿import { useState } from 'react';
-import Modal from '@/components/Modal/Modal';
+﻿import { useEffect, useState } from 'react'; 
 import Button from '@/components/Button/Button';
 import { ticketApi } from '@/services/api/ticketApi';
-import { useDispatch } from 'react-redux'; 
+import { useDispatch } from 'react-redux';
 import type { Ticket } from '@/entities/ticket';
-import { TicketPriority } from '../../types/ticketTypes';
-import { TicketStatus } from '../../types/ticketTypes';
-import { ticketUpdated } from '../../redux/slices/ticketSlice';
-
+import { TicketPriority, TicketStatus } from '../../types/ticketTypes';
+import {
+    ticketAdded,
+    ticketUpdated,
+} from '../../redux/slices/ticketSlice';
+import Modal from '../../components/Modal/Modal';
+ 
 type TicketModalProps = {
     open: boolean;
     onClose: () => void;
     ticket?: Ticket;
 };
-
+ 
 const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
     const dispatch = useDispatch();
-    const [title, setTitle] = useState(ticket?.title ?? '');
-    const [description, setDescription] = useState(ticket?.description ?? '');
-    const [priority, setPriority] = useState<TicketPriority>(ticket?.priority ?? TicketPriority.Medium);
-    const [status, setStatus] = useState<TicketStatus>(ticket?.status ?? TicketStatus.Open);
+    const [title, setTitle] = useState(ticket?.title);
+    const [description, setDescription] = useState(ticket?.description);
+    const [priority, setPriority] = useState<TicketPriority>(
+        ticket?.priority ?? TicketPriority.Medium
+    );
+    const [status, setStatus] = useState<TicketStatus>(
+        ticket?.status ?? TicketStatus.Open
+    );
+    const [submitting, setSubmitting] = useState(false);
+
+    useEffect(() => {
+        console.log(ticket);
+    }, [ticket]);
 
     const handleSubmit = async () => {
-        // optimistic
-        const mid = crypto.randomUUID();
+        setSubmitting(true);
 
-        if (ticket) {
-            // edit
-            const optimistic: Ticket = {
-                ...ticket,
-                title,
-                description,
-                priority,
-                status,
-                updatedAt: new Date().toISOString(),
-            };
-            //dispatch(
-            //    ticketUpdated({
-            //        mid,
-            //        next: optimisticNext,
-            //        prev: ticket,
-            //    })
-            //);
-            try {
+        try {
+            if (ticket) {
+                // UPDATE existing
                 const updated = await ticketApi.updateTicket(ticket.id, {
                     title,
                     description,
                     priority,
                     status,
                     version: ticket.version,
-                }, mid);
-                //dispatch(
-                //    ticketPatchedConfirmed({
-                //        mid,
-                //        ticket: updated,
-                //    })
-                //);
-                onClose();
-            } catch (err: any) {
-                // 409 etc
-                //dispatch(ticketPatchedRollback({ mid }));
-            }
-        } else {
-            // create
-            try {
-                await ticketApi.createTicket({
+                });
+
+                dispatch(ticketUpdated(updated));
+            } else {
+                // CREATE new
+                const created = await ticketApi.createTicket({
                     title,
                     description,
                     priority,
                     status,
                 });
-                onClose();
-            } catch (err) {
-                // keep modal open, maybe show error
+                dispatch(ticketAdded(created));
             }
+            onClose();
+        } catch (err) {
+            console.error('Ticket save failed:', err);
+        } finally {
+            setSubmitting(false);
         }
     };
 
-    return (
-        <Modal open={open} onClose={onClose} title={ticket ? 'Edit ticket' : 'Create ticket'}>
+    return ( 
+                <Modal
+                    open={open}
+                    onClose={onClose}
+                    title={ticket ? 'Edit Ticket' : 'Create Ticket'}
+                >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 <label>
                     <span>Title</span>
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        disabled={submitting}
+                    />
                 </label>
                 <label>
                     <span>Description</span>
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        disabled={submitting}
+                    />
                 </label>
                 <label>
                     <span>Priority</span>
-                    <select value={priority} onChange={(e) => setPriority(Number(e.target.value))}>
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                        <option value="Critical">Critical</option>
+                    <select
+                        value={priority}
+                        onChange={(e) =>
+                            setPriority(Number(e.target.value) as TicketPriority)
+                        }
+                        disabled={submitting}
+                    >
+                        <option value={TicketPriority.Low}>Low</option>
+                        <option value={TicketPriority.Medium}>Medium</option>
+                        <option value={TicketPriority.High}>High</option>
+                        <option value={TicketPriority.Critical}>Critical</option>
                     </select>
                 </label>
                 <label>
                     <span>Status</span>
-                    <select value={status} onChange={(e) => setStatus(Number(e.target.value))}>
-                        <option value="Open">Open</option>
-                        <option value="InProgress">In Progress</option>
-                        <option value="Resolved">Resolved</option>
+                    <select
+                        value={status}
+                        onChange={(e) =>
+                            setStatus(Number(e.target.value) as TicketStatus)
+                        }
+                        disabled={submitting}
+                    >
+                        <option value={TicketStatus.Open}>Open</option>
+                        <option value={TicketStatus.InProgress}>In Progress</option>
+                        <option value={TicketStatus.Resolved}>Resolved</option>
                     </select>
                 </label>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                    <Button variant="ghost" onClick={onClose}>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        gap: '0.5rem',
+                    }}
+                >
+                    <Button variant="ghost" onClick={onClose} disabled={submitting}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit}>
+                    <Button onClick={handleSubmit} disabled={submitting}>
                         {ticket ? 'Save' : 'Create'}
                     </Button>
-                </div>
-            </div>
-        </Modal>
+                        </div>
+                    </div>
+                </Modal>  
     );
 };
 
