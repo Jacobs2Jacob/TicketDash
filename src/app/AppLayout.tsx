@@ -5,8 +5,9 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     const { toggleTheme } = useTheme();
 
     return <div className={styles.shell}>
-        <button onClick={() => toggleTheme()}>Toggle</button>
-        <header className={styles.header}>Ticket Dashboard</header>
+        <header className={styles.header}>Ticket Dashboard
+            <button style={{ marginLeft: 'auto' }} onClick={() => toggleTheme()}>Toggle</button>
+        </header>
         <main className={styles.main}>{children}</main>
     </div>
 };

@@ -1,10 +1,10 @@
 import { type Middleware } from '@reduxjs/toolkit';
 import * as signalR from '@microsoft/signalr';
-import {
-    ticketCreatedFromHub,
-    ticketUpdatedFromHub,
-    ticketDeletedFromHub,
+import { 
     markTicketsStale,
+    ticketAdded,
+    ticketDeleted,
+    ticketUpdated,
 } from '@/redux/slices/ticketSlice';
 
 const makeDelays = () =>
@@ -35,21 +35,18 @@ export const signalrMiddleware: Middleware = (store) => {
                     .build();
 
                 connection.on('TicketCreated', (ticket) => {
-                    store.dispatch(ticketCreatedFromHub(ticket));
+                    store.dispatch(ticketAdded(ticket));
                 });
 
                 connection.on('TicketUpdated', (payload) => {
                     const { clientMutationId, ...ticket } = payload;
                     store.dispatch(
-                        ticketUpdatedFromHub({
-                            ticket,
-                            clientMutationId,
-                        })
+                        ticketUpdated(ticket)
                     );
                 });
 
                 connection.on('TicketDeleted', (id: string) => {
-                    store.dispatch(ticketDeletedFromHub(id));
+                    store.dispatch(ticketDeleted(id));
                 });
 
                 connection.onreconnecting(() => {

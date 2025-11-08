@@ -1,18 +1,19 @@
 import { axiosClient } from './axiosClient';
 import type { Ticket } from '@/entities/ticket';
 
-export type TicketQueryParams = {
+export interface TicketQueryParams {
     page?: number;
     pageSize?: number;
     status?: string;
     priority?: string;
     q?: string;
-    sort?: string; // "updatedAt_desc"
+    sort?: string; 
     sinceUpdatedAt?: string;
     offset?: number;
-};
-
+}; 
+ 
 export const ticketApi = {
+      
     getTickets: async (params?: TicketQueryParams) => {
         const res = await axiosClient.get<{ items: Ticket[] }>('/tickets', { params });
         return res.data.items ?? res.data;

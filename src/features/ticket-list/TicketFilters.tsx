@@ -1,20 +1,26 @@
+import { TicketPriority, TicketStatus } from "../../types/ticketTypes";
 
+interface TicketFiltersProps {
+    onStatusSelect: (status: TicketStatus) => void;
+    onPrioritySelect: (status: TicketPriority) => void;
+}
 
-const TicketFilters = () => { 
+const TicketFilters = (props: TicketFiltersProps) => {
+    
     return (
         <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem' }}>
-            <select>
-                <option value="">All statuses</option>
-                <option value="Open">Open</option>
-                <option value="InProgress">In Progress</option>
-                <option value="Resolved">Resolved</option>
+            <select onChange={val => props.onStatusSelect(Number(val.target.value))}>
+                <option value={null!}>All statuses</option>
+                <option value={TicketStatus.Open}>Open</option>
+                <option value={TicketStatus.InProgress}>In Progress</option>
+                <option value={TicketStatus.Resolved}>Resolved</option>
             </select>
-            <select>
-                <option value="">All priorities</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-                <option value="Critical">Critical</option>
+            <select onChange={val => props.onPrioritySelect(Number(val.target.value))}>
+                <option value={null!}>All priorities</option>
+                <option value={TicketPriority.Low}>Low</option>
+                <option value={TicketPriority.Medium}>Medium</option>
+                <option value={TicketPriority.High}>High</option>
+                <option value={TicketPriority.Critical}>Critical</option>
             </select>
         </div>
     );

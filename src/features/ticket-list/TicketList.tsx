@@ -1,11 +1,8 @@
 ﻿import { useMemo } from 'react';
-import { useInfiniteTickets } from '@/hooks/useInfiniteTickets';
-import {
-    InfiniteTable,
-    InfiniteTableRow,
-    type Column,
-} from '@/components/InfiniteTable';
+import { useInfiniteTickets } from '@/hooks/useInfiniteTickets'; 
 import { TicketPriority, TicketStatus } from '@/types/ticketTypes';
+import { InfiniteTable, type Column } from '@/components/InfiniteTable/InfiniteTable';
+import InfiniteTableRow from '@/components/InfiniteTable/InfiniteTableRow';
 
 const TicketList = () => {
     const {
@@ -23,14 +20,14 @@ const TicketList = () => {
         { key: 'updated', label: 'Updated', width: '1fr' },
     ], []);
 
+    const columnWidth = useMemo(() =>
+        columns.map((c) => c.width || '1fr').join(' '),
+    []);
+
     if (isLoading) {
         return <p>Loading tickets...</p>;
     } 
-
-    const columnWidth = useMemo(() =>
-        columns.map((c) => c.width || '1fr').join(' '),
-        []);
-
+     
     return (
         <InfiniteTable
             columns={columns}

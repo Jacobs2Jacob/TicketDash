@@ -2,13 +2,11 @@
 import Modal from '@/components/Modal/Modal';
 import Button from '@/components/Button/Button';
 import { ticketApi } from '@/services/api/ticketApi';
-import { useDispatch } from 'react-redux';
-import {
-    ticketPatchedOptimistic,
-    ticketPatchedConfirmed,
-    ticketPatchedRollback,
-} from '@/redux/slices/ticketSlice';
+import { useDispatch } from 'react-redux'; 
 import type { Ticket } from '@/entities/ticket';
+import { TicketPriority } from '../../types/ticketTypes';
+import { TicketStatus } from '../../types/ticketTypes';
+import { ticketUpdated } from '../../redux/slices/ticketSlice';
 
 type TicketModalProps = {
     open: boolean;
@@ -20,8 +18,8 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
     const dispatch = useDispatch();
     const [title, setTitle] = useState(ticket?.title ?? '');
     const [description, setDescription] = useState(ticket?.description ?? '');
-    const [priority, setPriority] = useState<Ticket['priority']>(ticket?.priority ?? 'Medium');
-    const [status, setStatus] = useState<Ticket['status']>(ticket?.status ?? 'Open');
+    const [priority, setPriority] = useState<TicketPriority>(ticket?.priority ?? TicketPriority.Medium);
+    const [status, setStatus] = useState<TicketStatus>(ticket?.status ?? TicketStatus.Open);
 
     const handleSubmit = async () => {
         // optimistic
@@ -29,7 +27,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
 
         if (ticket) {
             // edit
-            const optimisticNext: Ticket = {
+            const optimistic: Ticket = {
                 ...ticket,
                 title,
                 description,
@@ -37,13 +35,13 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                 status,
                 updatedAt: new Date().toISOString(),
             };
-            dispatch(
-                ticketPatchedOptimistic({
-                    mid,
-                    next: optimisticNext,
-                    prev: ticket,
-                })
-            );
+            //dispatch(
+            //    ticketUpdated({
+            //        mid,
+            //        next: optimisticNext,
+            //        prev: ticket,
+            //    })
+            //);
             try {
                 const updated = await ticketApi.updateTicket(ticket.id, {
                     title,
@@ -52,16 +50,16 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                     status,
                     version: ticket.version,
                 }, mid);
-                dispatch(
-                    ticketPatchedConfirmed({
-                        mid,
-                        ticket: updated,
-                    })
-                );
+                //dispatch(
+                //    ticketPatchedConfirmed({
+                //        mid,
+                //        ticket: updated,
+                //    })
+                //);
                 onClose();
             } catch (err: any) {
                 // 409 etc
-                dispatch(ticketPatchedRollback({ mid }));
+                //dispatch(ticketPatchedRollback({ mid }));
             }
         } else {
             // create
@@ -92,7 +90,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                 </label>
                 <label>
                     <span>Priority</span>
-                    <select value={priority} onChange={(e) => setPriority(e.target.value as Ticket['priority'])}>
+                    <select value={priority} onChange={(e) => setPriority(Number(e.target.value))}>
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
@@ -101,7 +99,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                 </label>
                 <label>
                     <span>Status</span>
-                    <select value={status} onChange={(e) => setStatus(e.target.value as Ticket['status'])}>
+                    <select value={status} onChange={(e) => setStatus(Number(e.target.value))}>
                         <option value="Open">Open</option>
                         <option value="InProgress">In Progress</option>
                         <option value="Resolved">Resolved</option>

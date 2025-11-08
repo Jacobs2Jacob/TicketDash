@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import TicketListPage from '@/features/ticket-list/TicketListPage';
+import TicketListPage from '@/pages/TicketListPage';
 
 export const AppRoutes = () => {
     return (
