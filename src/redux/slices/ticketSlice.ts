@@ -53,7 +53,7 @@ const ticketsSlice = createSlice({
 
         // UPDATE
         ticketUpdated(state, action: PayloadAction<Ticket>) {
-            ticketsAdapter.upsertOne(state, action.payload);
+            ticketsAdapter.setOne(state, action.payload);
 
             if (
                 !state.latestSeenUpdatedAt ||

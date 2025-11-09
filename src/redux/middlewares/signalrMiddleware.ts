@@ -7,6 +7,7 @@ import {
     ticketUpdated,
 } from '@/redux/slices/ticketSlice';
 
+// exponential reconnection
 const makeDelays = () =>
     [0, 1000, 2000, 4000, 8000, 16000]
         .map((d) => d + Math.random() * 300);
@@ -28,8 +29,7 @@ export const signalrMiddleware: Middleware = (store) => {
             try {
                 const token = localStorage.getItem('accessToken') ?? '';
                 connection = new signalR.HubConnectionBuilder()
-                    .withUrl('http://localhost:7180/hubs/tickets', {
-                        accessTokenFactory: () => token,
+                    .withUrl('http://localhost:5288/hubs/tickets', { 
                     })
                     .withAutomaticReconnect()
                     .build();
@@ -39,7 +39,7 @@ export const signalrMiddleware: Middleware = (store) => {
                 });
 
                 connection.on('TicketUpdated', (payload) => {
-                    const { clientMutationId, ...ticket } = payload;
+                    const { ...ticket } = payload;
                     store.dispatch(
                         ticketUpdated(ticket)
                     );
@@ -57,7 +57,7 @@ export const signalrMiddleware: Middleware = (store) => {
                     store.dispatch(markTicketsStale());
                 });
 
-                //await connection.start();
+                await connection.start();
                 connecting = false;
                 return;
             } catch (err) {

@@ -3,9 +3,10 @@ import { useInfiniteTickets } from '@/hooks/useInfiniteTickets';
 import { TicketPriority, TicketStatus } from '@/types/ticketTypes';
 import { InfiniteTable, type Column } from '@/components/InfiniteTable/InfiniteTable';
 import InfiniteTableRow from '@/components/InfiniteTable/InfiniteTableRow';
+import type { Ticket } from '../../entities/ticket';
 
 interface TicketListProps {
-    onUpdate: (id: string) => void;
+    onUpdate: (ticket: Ticket) => void;
     onDelete: (id: string) => void;
 }
 
@@ -20,10 +21,9 @@ const TicketList = (props: TicketListProps) => {
 
     const columns: Column[] = useMemo(() => [
         { key: 'title', label: 'Title', width: '2fr' },
-        { key: 'status', label: 'Status', width: '1fr' },
+        { key: 'status', label: 'Status', width: '0.5fr' },
         { key: 'priority', label: 'Priority', width: '1fr' },
         { key: 'created', label: 'Created', width: '1fr' },
-        { key: 'update', label: 'Update', width: '0.5fr', styles: { marginLeft: "30px", cursor: 'pointer' } },
         { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: "30px", cursor: 'pointer' } },
     ], []);
 
@@ -31,14 +31,12 @@ const TicketList = (props: TicketListProps) => {
         columns.map((c) => c.width || '1fr').join(' '),
     []);
 
-    const handleColumnClick = useCallback(async (column: Column, rowId: string) => {
-        if (column.key === 'update') {
-            props.onUpdate(rowId);
-        }
+    const handeleTicketDelete = useCallback(async (id: string) => {
+        props.onDelete(id);
+    }, [])
 
-        if (column.key === 'delete') {  
-            props.onDelete(rowId);
-        }
+    const handeleTicketUpdate = useCallback(async (ticket: Ticket) => {
+        props.onUpdate(ticket);
     }, [])
      
     if (isLoading) {
@@ -54,19 +52,23 @@ const TicketList = (props: TicketListProps) => {
             loader={<p>Loading more tickets...</p>}
         >
             {tickets.map((t) => {
-                return <InfiniteTableRow
-                        onColumnClick={handleColumnClick} 
+                return <InfiniteTableRow 
                         rowId={t.id} 
                         key={t.id} 
                         columns={columns} 
                         columnTemplate={columnWidth}>
                     {[
                         t.title,
-                        TicketStatus[t.status],
+                        <select
+                            value={t.status}
+                            onChange={(e) => handeleTicketUpdate({ ...t, status: Number(e.target.value) })}>
+                            <option value={TicketStatus.Open}>Open</option>
+                            <option value={TicketStatus.InProgress}>In Progress</option>
+                            <option value={TicketStatus.Resolved}>Resolved</option>
+                        </select>,
                         TicketPriority[t.priority],
                         new Date(t.createdAt).toLocaleString(),
-                        '+',
-                        '-'
+                        <span onClick={() => handeleTicketDelete(t.id)}>-</span>
                     ]}
                 </InfiniteTableRow>
             }

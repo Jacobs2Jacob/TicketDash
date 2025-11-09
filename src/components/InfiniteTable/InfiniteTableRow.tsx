@@ -1,16 +1,15 @@
-import React from 'react'; 
+import React, { type ReactNode } from 'react'; 
 import styles from './InfiniteTable.module.css';
 import type { Column } from './InfiniteTable';
 
 interface InfiniteTableRowProps {
-    children: string[];
+    children: ReactNode[];
     rowId: string;
     columnTemplate: string;
     columns: Column[];
-    onColumnClick: (column: Column, rowId: string) => void;
 }
 
-const InfiniteTableRow = ({ children, columnTemplate, columns, onColumnClick, rowId }: InfiniteTableRowProps) => {
+const InfiniteTableRow = ({ children, columnTemplate, columns }: InfiniteTableRowProps) => {
     
     return (
         <div
@@ -19,7 +18,6 @@ const InfiniteTableRow = ({ children, columnTemplate, columns, onColumnClick, ro
         >
             {children.map((child, i) => (
                 <span style={columns[i].styles}
-                    onClick={() => onColumnClick(columns[i], rowId)}
                     key={columns[i].key}>{child}</span>
             ))}
         </div>

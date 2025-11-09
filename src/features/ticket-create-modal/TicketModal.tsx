@@ -1,13 +1,8 @@
-﻿import { useEffect, useState } from 'react'; 
+﻿import { useState } from 'react'; 
 import Button from '@/components/Button/Button';
-import { ticketApi } from '@/services/api/ticketApi';
-import { useDispatch } from 'react-redux';
+import { ticketApi } from '@/services/api/ticketApi'; 
 import type { Ticket } from '@/entities/ticket';
-import { TicketPriority, TicketStatus } from '../../types/ticketTypes';
-import {
-    ticketAdded,
-    ticketUpdated,
-} from '../../redux/slices/ticketSlice';
+import { TicketPriority, TicketStatus } from '../../types/ticketTypes'; 
 import Modal from '../../components/Modal/Modal';
  
 type TicketModalProps = {
@@ -16,8 +11,7 @@ type TicketModalProps = {
     ticket?: Ticket;
 };
  
-const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
-    const dispatch = useDispatch();
+const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => { 
     const [title, setTitle] = useState(ticket?.title);
     const [description, setDescription] = useState(ticket?.description);
     const [priority, setPriority] = useState<TicketPriority>(
@@ -27,50 +21,34 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
         ticket?.status ?? TicketStatus.Open
     );
     const [submitting, setSubmitting] = useState(false);
-
-    useEffect(() => {
-        console.log(ticket);
-    }, [ticket]);
-
+     
     const handleSubmit = async () => {
         setSubmitting(true);
 
         try {
-            if (ticket) {
-                // UPDATE existing
-                const updated = await ticketApi.updateTicket(ticket.id, {
-                    title,
-                    description,
-                    priority,
-                    status,
-                    version: ticket.version,
-                });
-
-                dispatch(ticketUpdated(updated));
-            } else {
-                // CREATE new
-                const created = await ticketApi.createTicket({
-                    title,
-                    description,
-                    priority,
-                    status,
-                });
-                dispatch(ticketAdded(created));
-            }
+            // CREATE new
+            const created = await ticketApi.createTicket({
+                title,
+                description,
+                priority
+            }); 
+             
             onClose();
-        } catch (err) {
+        }
+        catch (err) {
             console.error('Ticket save failed:', err);
-        } finally {
+        }
+        finally {
             setSubmitting(false);
         }
     };
 
     return ( 
-                <Modal
-                    open={open}
-                    onClose={onClose}
-                    title={ticket ? 'Edit Ticket' : 'Create Ticket'}
-                >
+        <Modal
+            open={open}
+            onClose={onClose}
+            title={ticket ? 'Edit Ticket' : 'Create Ticket'}
+        >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 <label>
                     <span>Title</span>
@@ -130,9 +108,9 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                     <Button onClick={handleSubmit} disabled={submitting}>
                         {ticket ? 'Save' : 'Create'}
                     </Button>
-                        </div>
-                    </div>
-                </Modal>  
+                </div>
+            </div>
+        </Modal>  
     );
 };
 

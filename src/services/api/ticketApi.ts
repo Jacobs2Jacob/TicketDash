@@ -5,10 +5,8 @@ export interface TicketQueryParams {
     page?: number;
     pageSize?: number;
     status?: string;
-    priority?: string;
-    q?: string;
-    sort?: string; 
-    sinceUpdatedAt?: string;
+    priority?: string; 
+    sort?: string;  
     offset?: number;
 }; 
  
@@ -30,12 +28,9 @@ export const ticketApi = {
     },
 
     updateTicket: async (
-        id: string,
-        data: Partial<Ticket>,
-        clientMutationId?: string
+        data: Partial<Ticket>
     ) => {
-        const body = clientMutationId ? { ...data, clientMutationId } : data;
-        const res = await axiosClient.patch<Ticket>(`/tickets/${id}`, body);
+        const res = await axiosClient.patch<Ticket>(`/tickets`, data);
         return res.data;
     },
 

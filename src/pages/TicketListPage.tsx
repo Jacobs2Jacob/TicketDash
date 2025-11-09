@@ -4,10 +4,10 @@ import TicketFilters from '@/features/ticket-list/TicketFilters';
 import { ticketApi } from '@/services/api/ticketApi';
 import { TicketPriority, TicketStatus } from '../types/ticketTypes';
 import { useDispatch } from 'react-redux';
-import { ticketDeleted, ticketsReceived } from '../redux/slices/ticketSlice';
+import { ticketsReceived } from '../redux/slices/ticketSlice';
 import type { Ticket } from '@/entities/ticket';  
 
-const TicketModal = lazy(() => import('@/features/ticket-crud-modal/TicketModal'));
+const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModal'));
 
 const TicketListPage = () => {
 
@@ -22,17 +22,12 @@ const TicketListPage = () => {
         dispatch(ticketsReceived(tickets));
     }
 
-    const handleUpdateClick = useCallback(async (rowId: string) => {
-        const ticket = await ticketApi.getTicketById(rowId);
-        setTicket(ticket);
+    const handleUpdateClick = useCallback(async (ticket: Ticket) => {
+        await ticketApi.updateTicket(ticket);
     }, [])
 
-    const handleDeleteClick = useCallback(async (rowId: string) => {
-        const deleted = await ticketApi.deleteTicket(rowId);
-
-        if (deleted) {
-            dispatch(ticketDeleted(rowId));
-        }
+    const handleDeleteClick = useCallback(async (id: string) => {
+        await ticketApi.deleteTicket(id); 
     }, [])
 
     useEffect(() => {
