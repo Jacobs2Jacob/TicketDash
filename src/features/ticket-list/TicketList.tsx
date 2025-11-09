@@ -4,6 +4,9 @@ import { TicketPriority, TicketStatus } from '@/types/ticketTypes';
 import { InfiniteTable, type Column } from '@/components/InfiniteTable/InfiniteTable';
 import InfiniteTableRow from '@/components/InfiniteTable/InfiniteTableRow';
 import type { Ticket } from '../../entities/ticket';
+import { TrashIcon } from "@/components/Icons/icons";
+import { useViewport } from '../../hooks/useViewport';
+import InfiniteTableRowMobile from '../../components/InfiniteTable/InfiniteTableRowMobile';
 
 interface TicketListProps {
     onUpdate: (ticket: Ticket) => void;
@@ -11,6 +14,9 @@ interface TicketListProps {
 }
 
 const TicketList = (props: TicketListProps) => {
+
+    const viewport = useViewport();
+
     const {
         tickets,
         fetchNextPage,
@@ -24,7 +30,7 @@ const TicketList = (props: TicketListProps) => {
         { key: 'status', label: 'Status', width: '0.5fr' },
         { key: 'priority', label: 'Priority', width: '1fr' },
         { key: 'created', label: 'Created', width: '1fr' },
-        { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: "30px", cursor: 'pointer' } },
+        { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: viewport == 'desktop' ? "30px" : '', cursor: 'pointer' } },
     ], []);
 
     const columnWidth = useMemo(() =>
@@ -38,7 +44,7 @@ const TicketList = (props: TicketListProps) => {
     const handeleTicketUpdate = useCallback(async (ticket: Ticket) => {
         props.onUpdate(ticket);
     }, [])
-     
+
     if (isLoading) {
         return <p>Loading tickets...</p>;
     } 
@@ -52,11 +58,11 @@ const TicketList = (props: TicketListProps) => {
             loader={<p>Loading more tickets...</p>}
         >
             {tickets.map((t) => {
-                return <InfiniteTableRow 
-                        rowId={t.id} 
-                        key={t.id} 
-                        columns={columns} 
-                        columnTemplate={columnWidth}>
+                return viewport == 'mobile' ? <InfiniteTableRowMobile
+                    rowId={t.id}
+                    key={t.id}
+                    columns={columns}
+                    columnTemplate={columnWidth}>
                     {[
                         t.title,
                         <select
@@ -68,7 +74,25 @@ const TicketList = (props: TicketListProps) => {
                         </select>,
                         TicketPriority[t.priority],
                         new Date(t.createdAt).toLocaleString(),
-                        <span onClick={() => handeleTicketDelete(t.id)}>-</span>
+                        <span onClick={() => handeleTicketDelete(t.id)}>{TrashIcon}</span>
+                    ]}
+                </InfiniteTableRowMobile> : <InfiniteTableRow
+                    rowId={t.id}
+                    key={t.id}
+                    columns={columns}
+                    columnTemplate={columnWidth}>
+                    {[
+                        t.title,
+                        <select
+                            value={t.status}
+                            onChange={(e) => handeleTicketUpdate({ ...t, status: Number(e.target.value) })}>
+                            <option value={TicketStatus.Open}>Open</option>
+                            <option value={TicketStatus.InProgress}>In Progress</option>
+                            <option value={TicketStatus.Resolved}>Resolved</option>
+                        </select>,
+                        TicketPriority[t.priority],
+                        new Date(t.createdAt).toLocaleString(),
+                        <span onClick={() => handeleTicketDelete(t.id)}>{TrashIcon}</span>
                     ]}
                 </InfiniteTableRow>
             }
