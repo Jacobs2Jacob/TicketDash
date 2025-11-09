@@ -21,4 +21,4 @@ React Patterns used in this app:
 Hooks,
 Compounds,
 Presentational components and logic containers.
-Layout Pattern with one parent for both child to reduce loading times on unmount.
+Layout Pattern with one parent for both child to reduce loading times on unmount and hold the shared data in parent.
