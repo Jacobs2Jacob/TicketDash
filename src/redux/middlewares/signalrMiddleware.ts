@@ -32,6 +32,7 @@ export const signalrMiddleware: Middleware = (store) => {
 
                 connection = new signalR.HubConnectionBuilder()
                     .withUrl(hubUrl, { 
+                        accessTokenFactory: () => token
                     })
                     .withAutomaticReconnect()
                     .build();
