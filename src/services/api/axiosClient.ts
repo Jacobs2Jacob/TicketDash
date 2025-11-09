@@ -1,42 +1,49 @@
 ﻿import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
-
-// Create the Axios instance
+// Create a single Axios instance for all API calls
 export const axiosClient = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: '/api',
     headers: {
         'Content-Type': 'application/json',
     },
     timeout: 10000,
 });
 
-// Request interceptor - attach JWT
+// Request interceptor – attach JWT automatically
 axiosClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('accessToken');
+
         if (token) {
+            // Attach Bearer token if present
             config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
     },
     (error) => Promise.reject(error)
 );
 
-// Response interceptor - handle HTTP errors
+// Response interceptor – centralized HTTP error handling
 axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error?.response?.status;
 
         if (status === 401) {
-            // expired or invalid token - redirect
-            window.location.href = '/login';
+            // Token expired / invalid
+            console.warn('Unauthorized – redirecting to login...');
+            localStorage.removeItem('accessToken'); // clear bad token
+            //window.location.href = '/login';
         }
 
         if (status === 409) {
-            // conflict - maybe dispatch stale flag (future)
-            console.warn('Conflict detected, may need refetch.');
+            // concurrent update or conflict
+            console.warn('Conflict detected – consider re-fetching data.');
+        }
+
+        if (!error.response) {
+            console.error('Network error or server unreachable');
         }
 
         return Promise.reject(error);

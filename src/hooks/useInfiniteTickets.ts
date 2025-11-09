@@ -1,58 +1,46 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux'; 
-import type { RootState } from '@/redux/store';
-import { ticketApi } from '../services/api/ticketApi';
-import { selectAllTickets } from '../redux/selectors/ticketSelectors';
-import { ticketsPageLoading, ticketsPageReceived } from '../redux/slices/ticketSlice';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { ticketApi } from '@/services/api/ticketApi';
+import type { Ticket } from '@/entities/ticket';
+import { useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectAllTickets, 
+} from '../redux/selectors/ticketSelectors';
+import { 
+    ticketsReceived,
+} from '../redux/slices/ticketSlice';
 
 export const useInfiniteTickets = () => {
     const dispatch = useDispatch();
-    const tickets = useSelector(selectAllTickets);
-    const { stale, latestSeenUpdatedAt } = useSelector((s: RootState) => s.tickets);
-    const observerRef = useRef<IntersectionObserver | null>(null);
+    const storeTickets = useSelector(selectAllTickets); 
+    const pageSize = 30;
 
-    const fetchPage = useCallback(
-        async (page: number) => {
-
-            dispatch(ticketsPageLoading());
-
-            const data = await ticketApi.getTickets({
-                page,
-                pageSize: 50,
-                sort: 'updatedAt_desc',
-                sinceUpdatedAt: stale ? latestSeenUpdatedAt ?? undefined : undefined,
-            });
-
-            const items = Array.isArray(data) ? data : (data as any).items;
-
-            dispatch(
-                ticketsPageReceived({
-                    page,
-                    tickets: items,
-                    receivedAt: Date.now(),
-                })
-            );
-        },
-        [dispatch, stale, latestSeenUpdatedAt]
-    );
+    const query = useInfiniteQuery<Ticket[], Error>({
+        queryKey: ['tickets'],
+        queryFn: async ({ pageParam = 1 }) =>
+            await ticketApi.getTickets({
+                page: pageParam as number
+            }),
+        getNextPageParam: (lastPage, allPages) =>
+            lastPage.length < pageSize ? undefined : allPages.length + 1,
+        initialPageParam: 1,
+    });
 
     useEffect(() => {
-        fetchPage(1);
-    }, [fetchPage]);
+        if (query.data) {
+            const flat = query.data.pages.flat();
+            dispatch(ticketsReceived(flat));
+        }
+    }, [query.data, dispatch]);
 
-    const setLastRef = useCallback(
-        (node: HTMLDivElement | null) => {
-            if (observerRef.current) observerRef.current.disconnect();
-            observerRef.current = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    const nextPage = Math.floor(tickets.length / 50) + 1;
-                    fetchPage(nextPage);
-                }
-            });
-            if (node) observerRef.current.observe(node);
-        },
-        [fetchPage, tickets.length]
-    );
+    const tickets = useMemo(() => storeTickets, [storeTickets]);
 
-    return { tickets, setLastRef, stale };
+    return {
+        tickets,
+        fetchNextPage: query.fetchNextPage,
+        hasNextPage: query.hasNextPage,
+        isFetchingNextPage: query.isFetchingNextPage,
+        isLoading: query.isLoading,
+        isError: query.isError,
+    };
 };

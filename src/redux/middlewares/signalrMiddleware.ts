@@ -1,12 +1,12 @@
 import { type Middleware } from '@reduxjs/toolkit';
 import * as signalR from '@microsoft/signalr';
-import {
-    ticketCreatedFromHub,
-    ticketUpdatedFromHub,
-    ticketDeletedFromHub,
-    markTicketsStale,
+import {  
+    ticketAdded,
+    ticketDeleted,
+    ticketUpdated,
 } from '@/redux/slices/ticketSlice';
 
+// exponential reconnection
 const makeDelays = () =>
     [0, 1000, 2000, 4000, 8000, 16000]
         .map((d) => d + Math.random() * 300);
@@ -27,40 +27,42 @@ export const signalrMiddleware: Middleware = (store) => {
         for (const delay of delays) {
             try {
                 const token = localStorage.getItem('accessToken') ?? '';
+                const hubUrl = import.meta.env.VITE_SOCKET_HUB;
+
                 connection = new signalR.HubConnectionBuilder()
-                    .withUrl('http://localhost:5000/hubs/tickets', {
-                        accessTokenFactory: () => token,
+                    .withUrl(hubUrl, { 
+                        accessTokenFactory: () => token
                     })
                     .withAutomaticReconnect()
                     .build();
 
                 connection.on('TicketCreated', (ticket) => {
-                    store.dispatch(ticketCreatedFromHub(ticket));
+                    store.dispatch(ticketAdded(ticket));
                 });
 
                 connection.on('TicketUpdated', (payload) => {
-                    const { clientMutationId, ...ticket } = payload;
+                    const { ...ticket } = payload;
+                    console.log(ticket);
                     store.dispatch(
-                        ticketUpdatedFromHub({
-                            ticket,
-                            clientMutationId,
-                        })
+                        ticketUpdated(ticket)
                     );
                 });
 
                 connection.on('TicketDeleted', (id: string) => {
-                    store.dispatch(ticketDeletedFromHub(id));
+                    store.dispatch(ticketDeleted(id));
                 });
 
                 connection.onreconnecting(() => {
-                    store.dispatch(markTicketsStale());
+                    // for caching later
+                    //store.dispatch(markTicketsStale());
                 });
 
                 connection.onreconnected(() => {
-                    store.dispatch(markTicketsStale());
+                    // for caching later
+                    //store.dispatch(markTicketsStale());
                 });
 
-                //await connection.start();
+                await connection.start();
                 connecting = false;
                 return;
             } catch (err) {

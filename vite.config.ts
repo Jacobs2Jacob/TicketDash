@@ -1,29 +1,29 @@
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react'
+﻿import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
 import path from 'path';
+import { fileURLToPath, URL } from 'url';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, process.cwd());
+export default defineConfig(({ mode }) => { 
+    const env = loadEnv(mode, path.resolve(__dirname, '.'), '');
+     
+    console.log('[VITE] Using API target:', env.VITE_TICKET_API_URL);
 
     return {
+        envDir: path.resolve(__dirname, '.'), 
         plugins: [react()],
         resolve: {
             alias: {
-                '@': path.resolve(__dirname, './src'),
+                '@': fileURLToPath(new URL('./src', import.meta.url)),
             },
         },
-        define: {
-            'process.env': {}
-        },
         server: {
-            port: 54306,
             proxy: {
-                '/api/cocktails': {
-                    target: env.VITE_COCKTAIL_API_URL,
+                '/api': {
+                    target: env.VITE_TICKET_API_URL,
                     changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/api\/cocktails/, ''),
+                    secure: false
                 },
             },
         },
-    }
+    };
 });

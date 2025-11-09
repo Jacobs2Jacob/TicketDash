@@ -26,10 +26,17 @@ a:hover {
     box-sizing: border-box;
 }
 
+[data-theme='dark'] {
+    --background: #565353;
+    --text-color: #ffffff;
+}
+
 body {
+    background-color: var(--background) !important;
+    color: var(--text-color) !important;
+    transition: background-color 0.25s ease, color 0.25s ease;
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f8fafc;
 }
 
 input, select {
