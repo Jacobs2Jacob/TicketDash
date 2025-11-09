@@ -20,4 +20,5 @@ Used Context-Api for handling theme contexts and other light weight non-frequent
 React Patterns used in this app:
 Hooks,
 Compounds,
+Presentational components and logic containers.
 Layout Pattern with one parent for both child to reduce loading times on unmount.
