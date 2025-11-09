@@ -4,6 +4,7 @@ import { TicketPriority, TicketStatus } from '@/types/ticketTypes';
 import { InfiniteTable, type Column } from '@/components/InfiniteTable/InfiniteTable';
 import InfiniteTableRow from '@/components/InfiniteTable/InfiniteTableRow';
 import type { Ticket } from '../../entities/ticket';
+import type { Agent } from '../../entities/agent';
 import { TrashIcon } from "@/components/Icons/icons";
 import { useViewport } from '../../hooks/useViewport';
 import InfiniteTableRowMobile from '../../components/InfiniteTable/InfiniteTableRowMobile';
@@ -11,6 +12,7 @@ import InfiniteTableRowMobile from '../../components/InfiniteTable/InfiniteTable
 interface TicketListProps {
     onUpdate: (ticket: Ticket) => void;
     onDelete: (id: string) => void;
+    agents: Agent[]
 }
 
 const TicketList = (props: TicketListProps) => {
@@ -30,6 +32,8 @@ const TicketList = (props: TicketListProps) => {
         { key: 'status', label: 'Status', width: '0.5fr' },
         { key: 'priority', label: 'Priority', width: '0.5fr' },
         { key: 'created', label: 'Created', width: '0.5fr' },
+        { key: 'updated', label: 'Updated', width: '0.5fr' },
+        { key: 'agent', label: 'Agent', width: '0.5fr' },
         { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: viewport == 'desktop' ? "30px" : '', cursor: 'pointer' } },
     ], []);
 
@@ -58,8 +62,7 @@ const TicketList = (props: TicketListProps) => {
             loader={<p>Loading more tickets...</p>}
         >
             {tickets.map((t) => {
-                return viewport == 'mobile' ? <InfiniteTableRowMobile
-                    rowId={t.id}
+                return viewport == 'mobile' ? <InfiniteTableRowMobile 
                     key={t.id}
                     columns={columns}
                     columnTemplate={columnWidth}>
@@ -74,10 +77,17 @@ const TicketList = (props: TicketListProps) => {
                         </select>,
                         TicketPriority[t.priority],
                         new Date(t.createdAt).toLocaleString(),
+                        new Date(t.updatedAt).toLocaleString(),
+                        <select
+                            value={t.assigneeId!}
+                            onChange={(e) => handeleTicketUpdate({ ...t, assigneeId: e.target.value })}>
+                            {props.agents.map(agent => {
+                                return <option key={agent.id} value={agent.id}>{agent.name}</option>
+                            })}
+                        </select>,
                         <span onClick={() => handeleTicketDelete(t.id)}>{TrashIcon}</span>
                     ]}
-                </InfiniteTableRowMobile> : <InfiniteTableRow
-                    rowId={t.id}
+                </InfiniteTableRowMobile> : <InfiniteTableRow 
                     key={t.id}
                     columns={columns}
                     columnTemplate={columnWidth}>
@@ -92,6 +102,15 @@ const TicketList = (props: TicketListProps) => {
                         </select>,
                         TicketPriority[t.priority],
                         new Date(t.createdAt).toLocaleString(),
+                        new Date(t.updatedAt).toLocaleString(),
+                        <select
+                            value={t.assigneeId!}
+                            onChange={(e) => handeleTicketUpdate({ ...t, assigneeId: e.target.value })}>
+                            {props.agents.map(agent => {
+                                return <option value={agent.id}
+                                    key={agent.id}>{agent.name}</option>
+                            })}
+                        </select>,
                         <span onClick={() => handeleTicketDelete(t.id)}>{TrashIcon}</span>
                     ]}
                 </InfiniteTableRow>

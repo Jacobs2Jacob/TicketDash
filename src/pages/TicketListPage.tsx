@@ -5,7 +5,9 @@ import { ticketApi } from '@/services/api/ticketApi';
 import { TicketPriority, TicketStatus } from '../types/ticketTypes';
 import { useDispatch } from 'react-redux';
 import { ticketsReceived } from '../redux/slices/ticketSlice';
-import type { Ticket } from '@/entities/ticket';  
+import type { Ticket } from '@/entities/ticket';
+import type { Agent } from '@/entities/agent';
+import { agentApi } from '../services/api/agentApi';
 
 // lazy loading modal
 const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModal'));
@@ -13,6 +15,7 @@ const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModa
 const TicketListPage = () => {
 
     const [isModalOpen, setModalOpen] = useState(false);
+    const [agents, setAgents] = useState<Agent[]>([]);
     const [priority, setPriority] = useState<string>('');
     const [status, setStatus] = useState<string>('');
 
@@ -32,6 +35,16 @@ const TicketListPage = () => {
     const handleDeleteClick = useCallback(async (id: string) => {
         await ticketApi.deleteTicket(id); 
     }, [])
+
+    const getAgents = async () => {
+        const all = await agentApi.getAgents();
+        setAgents(all);
+    }
+
+    useEffect(() => {
+        console.log('here');
+        getAgents();
+    }, []);
 
     useEffect(() => {
         // if any filter has been touched
@@ -53,7 +66,7 @@ const TicketListPage = () => {
                     style={{ marginLeft: 'auto' }}>Create</button>
             </div>
 
-            <TicketList onUpdate={handleUpdateClick} onDelete={handleDeleteClick} />
+            <TicketList agents={agents} onUpdate={handleUpdateClick} onDelete={handleDeleteClick} />
 
             {isModalOpen && (
                 <Suspense fallback={<div>Loading modal...</div>}>

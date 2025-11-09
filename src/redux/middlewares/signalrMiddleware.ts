@@ -1,7 +1,6 @@
 import { type Middleware } from '@reduxjs/toolkit';
 import * as signalR from '@microsoft/signalr';
-import { 
-    markTicketsStale,
+import {  
     ticketAdded,
     ticketDeleted,
     ticketUpdated,
@@ -43,6 +42,7 @@ export const signalrMiddleware: Middleware = (store) => {
 
                 connection.on('TicketUpdated', (payload) => {
                     const { ...ticket } = payload;
+                    console.log(ticket);
                     store.dispatch(
                         ticketUpdated(ticket)
                     );
@@ -53,11 +53,13 @@ export const signalrMiddleware: Middleware = (store) => {
                 });
 
                 connection.onreconnecting(() => {
-                    store.dispatch(markTicketsStale());
+                    // for caching later
+                    //store.dispatch(markTicketsStale());
                 });
 
                 connection.onreconnected(() => {
-                    store.dispatch(markTicketsStale());
+                    // for caching later
+                    //store.dispatch(markTicketsStale());
                 });
 
                 await connection.start();

@@ -4,7 +4,6 @@ import type { Column } from './InfiniteTable';
 
 interface InfiniteTableRowProps {
     children: ReactNode[];
-    rowId: string;
     columnTemplate: string;
     columns: Column[];
 }
