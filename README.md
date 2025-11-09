@@ -1,7 +1,6 @@
 To execute:
 Make sure your client port is 5173.
 Run npm install.
-Install PostgreSQL if necessary.
 Run the app with npm run dev.
 Run unit tests with npm test.
 
