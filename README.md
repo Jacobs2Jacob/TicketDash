@@ -14,3 +14,6 @@ Used SignalR for real-time updates, as it integrates best with .NET and provides
 Used React Hook Form for a more maintainable and performant form experience with built-in validation.
 Used CSS Modules for scoped, maintainable styling with light/dark theme support through a theme context.
 The entire app is written in TypeScript for strong type safety and consistency between client and server models.
+I Used Redux, since tickets are the main feature in the app, they are complex and i used them with entity adapter, and may be used later by other components,
+Also Redux because it's great to use with websockets with it's middleware feature.
+Used Context-Api for handling theme contexts and other light weight non-frequent updated features.
