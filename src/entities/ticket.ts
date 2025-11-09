@@ -9,5 +9,4 @@ export interface Ticket {
     assigneeId?: string | null;
     createdAt: string;
     updatedAt: string;
-    version: number;
 };

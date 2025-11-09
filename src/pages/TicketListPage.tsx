@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { ticketsReceived } from '../redux/slices/ticketSlice';
 import type { Ticket } from '@/entities/ticket';  
 
+// lazy loading modal
 const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModal'));
 
 const TicketListPage = () => {
@@ -14,6 +15,8 @@ const TicketListPage = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [priority, setPriority] = useState<string>('');
     const [status, setStatus] = useState<string>('');
+
+    // for editing existing ticket (future requirements)
     const [ticket, setTicket] = useState<Ticket>();
     const dispatch = useDispatch();
      
@@ -23,7 +26,7 @@ const TicketListPage = () => {
     }
 
     const handleUpdateClick = useCallback(async (ticket: Ticket) => {
-        await ticketApi.updateTicket(ticket);
+        await ticketApi.updateTicket(ticket.id, ticket);
     }, [])
 
     const handleDeleteClick = useCallback(async (id: string) => {
@@ -36,13 +39,7 @@ const TicketListPage = () => {
             handleFiltering();
         }
     }, [priority, status]);
-
-    useEffect(() => {
-        if (ticket) {
-            setModalOpen(true);
-        }
-    }, [ticket]);
-
+      
     return (
         <div>
             <div style={{ display: 'flex' }}>

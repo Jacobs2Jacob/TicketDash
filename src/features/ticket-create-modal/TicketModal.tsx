@@ -27,7 +27,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
 
         try {
             // CREATE new
-            const created = await ticketApi.createTicket({
+            await ticketApi.createTicket({
                 title,
                 description,
                 priority
@@ -102,7 +102,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                         gap: '0.5rem',
                     }}
                 >
-                    <Button variant="ghost" onClick={onClose} disabled={submitting}>
+                    <Button onClick={onClose} disabled={submitting}>
                         Cancel
                     </Button>
                     <Button onClick={handleSubmit} disabled={submitting}>
