@@ -1,116 +1,145 @@
-﻿import { useState } from 'react'; 
+﻿import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import Button from '@/components/Button/Button';
-import { ticketApi } from '@/services/api/ticketApi'; 
+import { ticketApi } from '@/services/api/ticketApi';
 import type { Ticket } from '@/entities/ticket';
-import { TicketPriority, TicketStatus } from '../../types/ticketTypes'; 
+import { TicketPriority, TicketStatus } from '../../types/ticketTypes';
 import Modal from '../../components/Modal/Modal';
- 
+import styles from './TicketModal.module.css';
+
 type TicketModalProps = {
     open: boolean;
     onClose: () => void;
     ticket?: Ticket;
 };
- 
-const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => { 
-    const [title, setTitle] = useState(ticket?.title);
-    const [description, setDescription] = useState(ticket?.description);
-    const [priority, setPriority] = useState<TicketPriority>(
-        ticket?.priority ?? TicketPriority.Medium
-    );
-    const [status, setStatus] = useState<TicketStatus>(
-        ticket?.status ?? TicketStatus.Open
-    );
-    const [submitting, setSubmitting] = useState(false);
-     
-    const handleSubmit = async () => {
-        setSubmitting(true);
 
+type TicketFormData = {
+    title: string;
+    description: string;
+    priority: TicketPriority;
+    status: TicketStatus;
+};
+
+const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm<TicketFormData>({
+        defaultValues: {
+            title: ticket?.title ?? '',
+            description: ticket?.description ?? '',
+            priority: ticket?.priority ?? TicketPriority.Medium,
+            status: ticket?.status ?? TicketStatus.Open,
+        },
+    });
+
+    // Reset the form whenever a new ticket is passed (edit mode)
+    useEffect(() => {
+        reset({
+            title: ticket?.title ?? '',
+            description: ticket?.description ?? '',
+            priority: ticket?.priority ?? TicketPriority.Medium,
+            status: ticket?.status ?? TicketStatus.Open,
+        });
+    }, [ticket, reset]);
+
+    const onSubmit = async (data: TicketFormData) => {
         try {
-            // CREATE new
-            await ticketApi.createTicket({
-                title,
-                description,
-                priority
-            }); 
-             
+            if (ticket) {
+                await ticketApi.updateTicket(ticket.id, data);
+            } else {
+                await ticketApi.createTicket(data);
+            }
             onClose();
-        }
-        catch (err) {
+        } catch (err) {
             console.error('Ticket save failed:', err);
-        }
-        finally {
-            setSubmitting(false);
+            alert('Failed to save ticket. Please try again.');
         }
     };
 
-    return ( 
+    return (
         <Modal
             open={open}
             onClose={onClose}
             title={ticket ? 'Edit Ticket' : 'Create Ticket'}
         >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <label>
+            <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                <label className={styles.label}>
                     <span>Title</span>
                     <input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        disabled={submitting}
+                        type="text"
+                        {...register('title', { required: 'Title is required.' })}
+                        className={`${styles.input} ${errors.title ? styles.inputError : ''
+                            }`}
+                        disabled={isSubmitting}
                     />
+                    {errors.title && (
+                        <div className={styles.errorLabel}>{errors.title.message}</div>
+                    )}
                 </label>
-                <label>
+
+                <label className={styles.label}>
                     <span>Description</span>
                     <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        disabled={submitting}
+                        {...register('description', {
+                            required: 'Description is required.',
+                        })}
+                        className={`${styles.textarea} ${errors.description ? styles.inputError : ''
+                            }`}
+                        disabled={isSubmitting}
                     />
+                    {errors.description && (
+                        <div className={styles.errorLabel}>
+                            {errors.description.message}
+                        </div>
+                    )}
                 </label>
-                <label>
+
+                <label className={styles.label}>
                     <span>Priority</span>
                     <select
-                        value={priority}
-                        onChange={(e) =>
-                            setPriority(Number(e.target.value) as TicketPriority)
-                        }
-                        disabled={submitting}
+                        className={`${styles.select} ${errors.priority ? styles.inputError : ''
+                            }`}
+                        disabled={isSubmitting}
                     >
                         <option value={TicketPriority.Low}>Low</option>
                         <option value={TicketPriority.Medium}>Medium</option>
                         <option value={TicketPriority.High}>High</option>
                         <option value={TicketPriority.Critical}>Critical</option>
                     </select>
+                    {errors.priority && (
+                        <div className={styles.errorLabel}>{errors.priority.message}</div>
+                    )}
                 </label>
-                <label>
+
+                <label className={styles.label}>
                     <span>Status</span>
                     <select
-                        value={status}
-                        onChange={(e) =>
-                            setStatus(Number(e.target.value) as TicketStatus)
-                        }
-                        disabled={submitting}
+                        className={`${styles.select} ${errors.status ? styles.inputError : ''
+                            }`}
+                        disabled={isSubmitting}
                     >
                         <option value={TicketStatus.Open}>Open</option>
                         <option value={TicketStatus.InProgress}>In Progress</option>
                         <option value={TicketStatus.Resolved}>Resolved</option>
                     </select>
+                    {errors.status && (
+                        <div className={styles.errorLabel}>{errors.status.message}</div>
+                    )}
                 </label>
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: '0.5rem',
-                    }}
-                >
-                    <Button onClick={onClose} disabled={submitting}>
+
+                <div className={styles.actions}>
+                    <Button type="button" onClick={onClose} disabled={isSubmitting}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSubmit} disabled={submitting}>
+                    <Button type="submit" disabled={isSubmitting}>
                         {ticket ? 'Save' : 'Create'}
                     </Button>
                 </div>
-            </div>
-        </Modal>  
+            </form>
+        </Modal>
     );
 };
 

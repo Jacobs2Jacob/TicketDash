@@ -30,8 +30,8 @@
         background: #fafafa;
     }
 
-/* --- MOBILE --- */
-@media (max-width: 480px) {
+/* --- MOBILE / Tablet --- */
+@media (max-width: 768px) {
     .header {
         display: none;
     }
@@ -55,4 +55,8 @@
         display: block;
         margin-bottom: 2px;
     }
+}
+ 
+[data-theme='dark'] .header {
+    background: #334155;
 }

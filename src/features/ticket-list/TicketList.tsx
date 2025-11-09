@@ -26,10 +26,10 @@ const TicketList = (props: TicketListProps) => {
     } = useInfiniteTickets();
 
     const columns: Column[] = useMemo(() => [
-        { key: 'title', label: 'Title', width: '2fr' },
+        { key: 'title', label: 'Title', width: '1fr' },
         { key: 'status', label: 'Status', width: '0.5fr' },
-        { key: 'priority', label: 'Priority', width: '1fr' },
-        { key: 'created', label: 'Created', width: '1fr' },
+        { key: 'priority', label: 'Priority', width: '0.5fr' },
+        { key: 'created', label: 'Created', width: '0.5fr' },
         { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: viewport == 'desktop' ? "30px" : '', cursor: 'pointer' } },
     ], []);
 

@@ -41,7 +41,7 @@ export const InfiniteTable = ({
     return (
         <div
             className={`${styles.container} ${className || ''}`}
-            style={{ height }}
+            style={{ height, marginTop: '5px' }}
         >
             <InfiniteTableHeader columns={columns} gridTemplate={gridTemplate} />
 
