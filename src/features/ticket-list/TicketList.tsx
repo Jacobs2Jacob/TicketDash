@@ -79,7 +79,7 @@ const TicketList = (props: TicketListProps) => {
                         new Date(t.createdAt).toLocaleString(),
                         new Date(t.updatedAt).toLocaleString(),
                         <select
-                            value={t.assigneeId!}
+                            value={t.assigneeId ?? ''}
                             onChange={(e) => handeleTicketUpdate({ ...t, assigneeId: e.target.value })}>
                             {props.agents.map(agent => {
                                 return <option key={agent.id} value={agent.id}>{agent.name}</option>
@@ -104,7 +104,7 @@ const TicketList = (props: TicketListProps) => {
                         new Date(t.createdAt).toLocaleString(),
                         new Date(t.updatedAt).toLocaleString(),
                         <select
-                            value={t.assigneeId!}
+                            value={t.assigneeId ?? ''}
                             onChange={(e) => handeleTicketUpdate({ ...t, assigneeId: e.target.value })}>
                             {props.agents.map(agent => {
                                 return <option value={agent.id}

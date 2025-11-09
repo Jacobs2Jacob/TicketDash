@@ -3,7 +3,7 @@ import type { Ticket } from '@/entities/ticket';
  
 export const ticketsAdapter = createEntityAdapter<Ticket, string>({
     selectId: (t) => t.id,
-    // sortComparer: (a, b) => b.updatedAt.localeCompare(a.updatedAt),
+    sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
 });
 
 const initialState = ticketsAdapter.getInitialState({ 
