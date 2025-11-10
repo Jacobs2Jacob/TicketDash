@@ -26,7 +26,7 @@ Since tickets are the main feature in the app, they are complex and i used them 
 Also because it's great to use with websockets with it's middleware feature.  
 **Context-Api:**  
 For handling theme contexts and other light weight non-frequent updated features.  
-**Vite**  
+**Vite:**  
 For configuration simplicity, fast dev server and modern codebase.  
   
 **React Patterns used in this app:**  
