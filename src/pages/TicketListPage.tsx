@@ -36,11 +36,11 @@ const TicketListPage = () => {
         await ticketApi.deleteTicket(id); 
     }, [])
 
-const handlePrioritySelect = useCallback((val: keyof typeof TicketPriority) => {
+const handlePrioritySelect = useCallback((val: TicketPriority) => {
   setPriority(TicketPriority[val]);
 }, []);
 
-const handleStatusSelect = useCallback((val: keyof typeof TicketStatus) => {
+const handleStatusSelect = useCallback((val: TicketStatus) => {
   setStatus(TicketStatus[val]);
 }, []);
 
