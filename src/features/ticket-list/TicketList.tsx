@@ -39,7 +39,7 @@ const TicketList = (props: TicketListProps) => {
 
     const columnWidth = useMemo(() =>
         columns.map((c) => c.width || '1fr').join(' '),
-    []);
+    [columns]);
 
     const handeleTicketDelete = useCallback(async (id: string) => {
         props.onDelete(id);
