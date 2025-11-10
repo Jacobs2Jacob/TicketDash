@@ -31,6 +31,10 @@ a:hover {
     --text-color: #ffffff;
 }
 
+[data-theme="dark"] .accessibility_icon {
+    filter: invert(1);
+}
+
 body {
     background-color: var(--background) !important;
     color: var(--text-color) !important;
