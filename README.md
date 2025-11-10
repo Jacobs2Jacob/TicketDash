@@ -1,5 +1,5 @@
 To execute:
-Make sure your client port is 5173.
+Make sure your client port is 5173.  
 Run npm install.
 Run the app with npm run dev.
 Run unit tests with npm test.
