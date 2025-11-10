@@ -21,9 +21,9 @@ const Modal = ({ open, onClose, title, children }: ModalProps) => {
             <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
                     <h2 className={styles.title}>{title ?? 'Modal'}</h2>
-                    <button onClick={onClose} aria-label="Close" className={styles.close}>
+                    <label onClick={onClose} aria-label="Close" className={styles.close}>
                         x
-                    </button>
+                    </label>
                 </div>
                 <div className={styles.body}>{children}</div>
             </div>

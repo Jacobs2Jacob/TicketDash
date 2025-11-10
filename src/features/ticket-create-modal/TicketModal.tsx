@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import { ticketApi } from '@/services/api/ticketApi';
 import type { Ticket } from '@/entities/ticket';
-import { TicketPriority, TicketStatus } from '../../types/ticketTypes';
+import { TicketPriority } from '../../types/ticketTypes';
 import Modal from '../../components/Modal/Modal';
 import styles from './TicketModal.module.css';
 
@@ -16,8 +16,7 @@ type TicketModalProps = {
 type TicketFormData = {
     title: string;
     description: string;
-    priority: TicketPriority;
-    status: TicketStatus;
+    priority: TicketPriority; 
 };
 
 const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
@@ -30,8 +29,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
         defaultValues: {
             title: ticket?.title ?? '',
             description: ticket?.description ?? '',
-            priority: ticket?.priority ?? TicketPriority.Medium,
-            status: ticket?.status ?? TicketStatus.Open,
+            priority: ticket?.priority ?? TicketPriority.Medium, 
         },
     });
 
@@ -40,18 +38,19 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
         reset({
             title: ticket?.title ?? '',
             description: ticket?.description ?? '',
-            priority: ticket?.priority ?? TicketPriority.Medium,
-            status: ticket?.status ?? TicketStatus.Open,
+            priority: ticket?.priority ?? TicketPriority.Medium
         });
     }, [ticket, reset]);
 
     const onSubmit = async (data: TicketFormData) => {
         try {
             if (ticket) {
-                await ticketApi.updateTicket(ticket.id, data);
+                //await ticketApi.updateTicket(ticket.id, data);
             } else {
+                data.priority = Number(data.priority);
                 await ticketApi.createTicket(data);
             }
+
             onClose();
         } catch (err) {
             console.error('Ticket save failed:', err);
@@ -100,8 +99,8 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                 <label className={styles.label}>
                     <span>Priority</span>
                     <select
-                        className={`${styles.select} ${errors.priority ? styles.inputError : ''
-                            }`}
+                        {...register('priority', { required: 'Priority is required.' })}
+                        className={`${styles.select} ${errors.priority ? styles.inputError : ''}`}
                         disabled={isSubmitting}
                     >
                         <option value={TicketPriority.Low}>Low</option>
@@ -113,23 +112,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                         <div className={styles.errorLabel}>{errors.priority.message}</div>
                     )}
                 </label>
-
-                <label className={styles.label}>
-                    <span>Status</span>
-                    <select
-                        className={`${styles.select} ${errors.status ? styles.inputError : ''
-                            }`}
-                        disabled={isSubmitting}
-                    >
-                        <option value={TicketStatus.Open}>Open</option>
-                        <option value={TicketStatus.InProgress}>In Progress</option>
-                        <option value={TicketStatus.Resolved}>Resolved</option>
-                    </select>
-                    {errors.status && (
-                        <div className={styles.errorLabel}>{errors.status.message}</div>
-                    )}
-                </label>
-
+                 
                 <div className={styles.actions}>
                     <Button type="button" onClick={onClose} disabled={isSubmitting}>
                         Cancel

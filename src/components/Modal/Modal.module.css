@@ -39,3 +39,13 @@
 .body {
     padding: 1rem;
 }
+
+[data-theme='dark'] .body {
+    background: #565353;
+    color: #ffffff;
+}
+
+[data-theme='dark'] .header {
+    background: #565353;
+    color: #ffffff;
+}
