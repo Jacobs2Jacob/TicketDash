@@ -22,8 +22,7 @@ For scoped, maintainable styling with light/dark theme support through a theme c
 **-TypeScript:**  
 For strong type safety and consistency between client and server models.  
 **-Redux:**  
-Since tickets are the main feature in the app, they are complex and i used them with entity adapter, and may be used later by other components,
-Also because it's great to use with websockets with it's middleware feature.  
+Since tickets are the main feature in the app, they are shared, frequently change, so I used them with entity adapter, also Redux it's great fit for websockets with it's middleware feature.   
 **-Context-Api:**  
 For handling theme contexts and other light weight non-frequent updated features.  
 **-Vite:**  
