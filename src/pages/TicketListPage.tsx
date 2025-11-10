@@ -36,6 +36,14 @@ const TicketListPage = () => {
         await ticketApi.deleteTicket(id); 
     }, [])
 
+const handlePrioritySelect = useCallback((val: keyof typeof TicketPriority) => {
+  setPriority(TicketPriority[val]);
+}, []);
+
+const handleStatusSelect = useCallback((val: keyof typeof TicketStatus) => {
+  setStatus(TicketStatus[val]);
+}, []);
+
     const getAgents = async () => {
         const all = await agentApi.getAgents();
         setAgents(all);
@@ -56,8 +64,8 @@ const TicketListPage = () => {
         <div>
             <div style={{ display: 'flex' }}>
                 <TicketFilters
-                    onPrioritySelect={val => setPriority(TicketPriority[val])}
-                    onStatusSelect={val => setStatus(TicketStatus[val])} />
+                    onPrioritySelect={handlePrioritySelect}
+                    onStatusSelect={handleStatusSelect} />
                 <button onClick={() => {
                     setTicket(null!);
                     setModalOpen(true);
