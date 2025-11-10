@@ -22,7 +22,9 @@ For scoped, maintainable styling with light/dark theme support through a theme c
 **-TypeScript:**  
 For strong type safety and consistency between client and server models.  
 **-Redux:**  
-Since tickets are the main feature in the app, they are shared, frequently change, so I used them with entity adapter, also Redux it's great fit for websockets with it's middleware feature.   
+I chose Redux because tickets are a core and dynamic part of the app. Redux provides a predictable, centralized way to manage this data, and the Entity Adapter simplifies handling frequent updates and normalized state.  
+As the app evolves using the ticket states can be easily shared across the components.  
+In addition, Redux middleware integrates well with real-time updates via WebSockets.  
 **-Context-Api:**  
 For handling theme contexts and other light weight non-frequent updated features.  
 **-Vite:**  
