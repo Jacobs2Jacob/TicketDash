@@ -5,28 +5,28 @@ Run the app with npm run dev.
 Run unit tests with npm test.  
   
 **Architectural Decisions**  
-**Feature-driven:**  
+**-Feature-driven:**  
 A common and scalable approach that isolates feature components from shared components (reusable across multiple features).  
-**Smart Routes:**  
+**-Smart Routes:**  
 For supporting future route based components and better scalability.  
-**React Query:**  
+**-React Query:**  
 Along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.  
-**Jest:**  
+**-Jest:**  
 For unit testing of core API functionality.  
-**Signalr:**  
+**-Signalr:**  
 For real-time updates, as it integrates best with .NET and provides stable WebSocket communication.  
-**React Hook Form:**  
+**-React Hook Form:**  
 For a more maintainable and performant form experience with built-in validation.  
-**CSS Modules:**  
+**-CSS Modules:**  
 For scoped, maintainable styling with light/dark theme support through a theme context.  
-**TypeScript:**  
+**-TypeScript:**  
 For strong type safety and consistency between client and server models.  
-**Redux:**  
+**-Redux:**  
 Since tickets are the main feature in the app, they are complex and i used them with entity adapter, and may be used later by other components,
 Also because it's great to use with websockets with it's middleware feature.  
-**Context-Api:**  
+**-Context-Api:**  
 For handling theme contexts and other light weight non-frequent updated features.  
-**Vite:**  
+**-Vite:**  
 For configuration simplicity, fast dev server and modern codebase.  
   
 **React Patterns used in this app:**  
