@@ -60,3 +60,7 @@
 [data-theme='dark'] .header {
     background: #334155;
 }
+
+[data-theme='dark'] .row:hover {
+    color: #213547
+}
