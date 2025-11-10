@@ -1,8 +1,8 @@
 **To Execute:**  
-Make sure your client port is 5173.  
-Run npm install.  
-Run the app with npm run dev.  
-Run unit tests with npm test.  
+-Make sure your client port is 5173.  
+-Run npm install.  
+-Run the app with npm run dev.  
+-Run unit tests with npm test.  
   
 **Architectural Decisions**  
 **-Feature-driven:**  
