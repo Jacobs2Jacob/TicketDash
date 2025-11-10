@@ -22,7 +22,8 @@ For scoped, maintainable styling with light/dark theme support through a theme c
 **-TypeScript:**  
 For strong type safety and consistency between client and server models.  
 **-Redux:**  
-I chose Redux because tickets are a core and dynamic part of the app. Redux provides a predictable, centralized way to manage this data, and the Entity Adapter simplifies handling frequent updates and normalized state.  
+Tickets are a core and dynamic part of the app.  
+Redux provides a predictable, centralized way to manage this data, and the Entity Adapter simplifies handling frequent updates and normalized state.  
 As the app evolves using the ticket states can be easily shared across the components.  
 In addition, Redux middleware integrates well with real-time updates via WebSockets.  
 **-Context-Api:**  
