@@ -6,7 +6,7 @@ Run unit tests with npm test.
 
 Architectural Decisions:
 The directory structure is feature-driven, a common and scalable approach that isolates feature components from shared components (reusable across multiple features).
-Used smart routes to support future code splitting and better scalability.
+Used smart routes to support future route based components and better scalability.
 Used React Query with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.
 Used Jest for unit testing of core API functionality.
 Used SignalR for real-time updates, as it integrates best with .NET and provides stable WebSocket communication.
