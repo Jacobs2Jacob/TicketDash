@@ -68,6 +68,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                 <label className={styles.label}>
                     <span>Title</span>
                     <input
+                        maxLength={160}
                         type="text"
                         {...register('title', { required: 'Title is required.' })}
                         className={`${styles.input} ${errors.title ? styles.inputError : ''
@@ -85,6 +86,7 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                         {...register('description', {
                             required: 'Description is required.',
                         })}
+                        maxLength={200}
                         className={`${styles.textarea} ${errors.description ? styles.inputError : ''
                             }`}
                         disabled={isSubmitting}
