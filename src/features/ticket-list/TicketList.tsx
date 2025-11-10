@@ -1,4 +1,4 @@
-﻿import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useInfiniteTickets } from '@/hooks/useInfiniteTickets'; 
 import { TicketPriority, TicketStatus } from '@/types/ticketTypes';
 import { InfiniteTable, type Column } from '@/components/InfiniteTable/InfiniteTable';
@@ -35,7 +35,7 @@ const TicketList = (props: TicketListProps) => {
         { key: 'updated', label: 'Updated', width: '0.5fr' },
         { key: 'agent', label: 'Agent', width: '0.5fr' },
         { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: viewport == 'desktop' ? "30px" : '', cursor: 'pointer' } },
-    ], []);
+    ], [viewport]);
 
     const columnWidth = useMemo(() =>
         columns.map((c) => c.width || '1fr').join(' '),
@@ -43,11 +43,11 @@ const TicketList = (props: TicketListProps) => {
 
     const handeleTicketDelete = useCallback(async (id: string) => {
         props.onDelete(id);
-    }, [])
+    }, [props.onDelete])
 
     const handeleTicketUpdate = useCallback(async (ticket: Ticket) => {
         props.onUpdate(ticket);
-    }, [])
+    }, [props.onUpdate])
 
     if (isLoading) {
         return <p>Loading tickets...</p>;
@@ -121,4 +121,4 @@ const TicketList = (props: TicketListProps) => {
     );
 };
 
-export default TicketList;
+export default React.memo(TicketList);
