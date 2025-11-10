@@ -42,7 +42,6 @@ const TicketListPage = () => {
     }
 
     useEffect(() => {
-        console.log('here');
         getAgents();
     }, []);
 
