@@ -4,20 +4,22 @@ import { loginThunk } from '../thunks/authThunks';
 interface AuthState {
     isLoggedIn: boolean;
     loading: boolean;
+    error: string;
 }
 
 const initialState: AuthState = {
     isLoggedIn: false,
     loading: false,
+    error: '',
 };
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        logout: (state) => {
-            state.isLoggedIn = false;
-        }
+        //logout: (state) => {
+            //state.isLoggedIn = false;
+        //}
     },
     extraReducers: (builder) => {
         builder
@@ -30,12 +32,13 @@ export const authSlice = createSlice({
             })
             .addCase(loginThunk.rejected, (state) => {
                 state.loading = false;
+                state.error = 'Login failed';
             });
     }
 });
 
 export const {
-    logout
+    //logout
 } = authSlice.actions;
 
 export default authSlice.reducer;
