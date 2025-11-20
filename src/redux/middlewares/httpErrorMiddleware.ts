@@ -7,16 +7,11 @@ export const httpErrorMiddleware: Middleware = () => (next) => (action: any) => 
         const { status, message } = action.payload;
 
         if (status === 401) {
-            // Example global reaction
             window.location.href = '/login';
         }
 
         if (status === 500) {
             console.error('Server error:', message);
-        }
-
-        if (status === 409) {
-            console.warn('Conflict detected:', message);
         }
     }
 
