@@ -28,7 +28,7 @@ As the app evolves using the ticket states can be easily shared across the compo
 In addition, Redux middleware integrates well with real-time updates via WebSockets.  
 **-Error Handling:**  
 Global: Interceptor -> Middleware -> UI  
-Local: try/catch state
+Local: try/catch state  
 **-Context-Api:**  
 For handling theme contexts and other light weight non-frequent updated features.  
 **-Vite:**  
