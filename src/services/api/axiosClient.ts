@@ -1,4 +1,6 @@
 ﻿import axios from 'axios';
+import { store } from '@/redux/store';
+import { httpErrorAction } from '@/redux/slices/httpErrorSlice';
 
 // Create a single Axios instance for all API calls
 export const axiosClient = axios.create({
@@ -7,45 +9,28 @@ export const axiosClient = axios.create({
         'Content-Type': 'application/json',
     },
     timeout: 10000,
+    withCredentials: true,
 });
 
-// Request interceptor – attach JWT automatically
-axiosClient.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('accessToken');
-
-        if (token) {
-            // Attach Bearer token if present
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
-
-// Response interceptor – centralized HTTP error handling
+// Response interceptor
 axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        const status = error?.response?.status;
+        const status = error?.response?.status ?? null;
 
-        if (status === 401) {
-            // Token expired / invalid
-            console.warn('Unauthorized – redirecting to login...');
-            localStorage.removeItem('accessToken'); // clear bad token
-            //window.location.href = '/login';
-        }
+        const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            'Unknown network error';
 
-        if (status === 409) {
-            // concurrent update or conflict
-            console.warn('Conflict detected – consider re-fetching data.');
-        }
+        // Dispatch to http error middleware
+        store.dispatch(
+            httpErrorAction({
+                status,
+                message,
+            })
+        );
 
-        if (!error.response) {
-            console.error('Network error or server unreachable');
-        }
-
-        return Promise.reject(error);
+        return Promise.reject({ status, message });
     }
 );

@@ -26,12 +26,11 @@ export const signalrMiddleware: Middleware = (store) => {
 
         for (const delay of delays) {
             try {
-                const token = localStorage.getItem('accessToken') ?? '';
                 const hubUrl = import.meta.env.VITE_SOCKET_HUB;
 
                 connection = new signalR.HubConnectionBuilder()
-                    .withUrl(hubUrl, { 
-                        accessTokenFactory: () => token
+                    .withUrl(hubUrl, {
+                        withCredentials: true
                     })
                     .withAutomaticReconnect()
                     .build();
