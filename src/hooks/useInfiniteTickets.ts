@@ -1,46 +1,47 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { ticketApi } from '@/services/api/ticketApi';
-import type { Ticket } from '@/entities/ticket';
-import { useMemo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    selectAllTickets, 
-} from '../redux/selectors/ticketSelectors';
+import { ticketApi } from '@/services/api/ticketApi'; 
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux'; 
 import { 
     ticketsReceived,
 } from '../redux/slices/ticketSlice';
+import type { TicketApiResponse } from '@/services/api/ticketApi';
 
-export const useInfiniteTickets = () => {
+export const useInfiniteTickets = (filters?: { status?: string; priority?: string }) => {
     const dispatch = useDispatch();
-    const storeTickets = useSelector(selectAllTickets); 
     const pageSize = 30;
 
-    const query = useInfiniteQuery<Ticket[], Error>({
-        queryKey: ['tickets'],
-        queryFn: async ({ pageParam = 1 }) =>
-            await ticketApi.getTickets({
-                page: pageParam as number
-            }),
-        getNextPageParam: (lastPage, allPages) =>
-            lastPage.length < pageSize ? undefined : allPages.length + 1,
-        initialPageParam: 1,
+    const query = useInfiniteQuery<TicketApiResponse, Error>({
+        queryKey: ['tickets', filters?.status, filters?.priority],
+        queryFn: async ({ pageParam = 1 }) => {
+            return await ticketApi.getTickets({
+                page: pageParam as number,
+                pageSize: pageSize,
+                ...(filters?.status && { status: filters.status }),
+                ...(filters?.priority && { priority: filters.priority }),
+            });
+        },
+        getNextPageParam: (lastPage, allPages) => {
+            return allPages.flatMap(fm => fm.items).length < (allPages[0]?.total ?? 0) 
+                ? allPages.length + 1 
+                : undefined;
+        },
+        initialPageParam: 1
     });
 
     useEffect(() => {
         if (query.data) {
-            const flat = query.data.pages.flat();
+            const flat = query.data.pages.flatMap(fm => fm.items); 
             dispatch(ticketsReceived(flat));
         }
     }, [query.data, dispatch]);
 
-    const tickets = useMemo(() => storeTickets, [storeTickets]);
-
     return {
-        tickets,
         fetchNextPage: query.fetchNextPage,
         hasNextPage: query.hasNextPage,
         isFetchingNextPage: query.isFetchingNextPage,
         isLoading: query.isLoading,
         isError: query.isError,
+        refetch: query.refetch
     };
 };

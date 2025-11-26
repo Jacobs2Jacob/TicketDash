@@ -8,25 +8,29 @@ import type { Agent } from '../../entities/agent';
 import { TrashIcon } from "@/components/Icons/icons";
 import { useViewport } from '../../hooks/useViewport';
 import InfiniteTableRowMobile from '../../components/InfiniteTable/InfiniteTableRowMobile';
+import { useSelector } from 'react-redux';
+import { selectAllTickets } from '../../redux/selectors/ticketSelectors';
+import { buildColumnTemplate } from '@/components/InfiniteTable/InfiniteTable';
 
 interface TicketListProps {
     onUpdate: (ticket: Ticket) => void;
     onDelete: (id: string) => void;
-    agents: Agent[]
+    agents: Agent[];
+    filters?: { status?: string; priority?: string };
 }
 
 const TicketList = (props: TicketListProps) => {
 
+    const storeTickets = useSelector(selectAllTickets);
     const viewport = useViewport();
 
-    const {
-        tickets,
+    const { 
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-        isLoading,
-    } = useInfiniteTickets();
-
+        isLoading
+    } = useInfiniteTickets(props.filters);
+     
     const columns: Column[] = useMemo(() => [
         { key: 'title', label: 'Title', width: '1fr' },
         { key: 'status', label: 'Status', width: '0.5fr' },
@@ -37,9 +41,9 @@ const TicketList = (props: TicketListProps) => {
         { key: 'delete', label: 'Delete', width: '0.5fr', styles: { marginLeft: viewport == 'desktop' ? "30px" : '', cursor: 'pointer' } },
     ], [viewport]);
 
-    const columnWidth = useMemo(() =>
-        columns.map((c) => c.width || '1fr').join(' '),
-    [columns]);
+    const columnTemplate = useMemo(() => {
+        return buildColumnTemplate(columns);
+    }, [columns]);
 
     const handeleTicketDelete = useCallback(async (id: string) => {
         props.onDelete(id);
@@ -52,20 +56,20 @@ const TicketList = (props: TicketListProps) => {
     if (isLoading) {
         return <p>Loading tickets...</p>;
     } 
-     
+
     return (
         <InfiniteTable
             columns={columns}
-            dataLength={tickets.length}
+            dataLength={storeTickets.length}
             hasMore={!!hasNextPage}
             next={fetchNextPage}
             loader={<p>Loading more tickets...</p>}
         >
-            {tickets.map((t) => {
+            {storeTickets.map((t) => {
                 return viewport == 'mobile' ? <InfiniteTableRowMobile 
                     key={t.id}
                     columns={columns}
-                    columnTemplate={columnWidth}>
+                    columnTemplate={columnTemplate}>
                     {[
                         t.title,
                         <select
@@ -90,7 +94,7 @@ const TicketList = (props: TicketListProps) => {
                 </InfiniteTableRowMobile> : <InfiniteTableRow 
                     key={t.id}
                     columns={columns}
-                    columnTemplate={columnWidth}>
+                    columnTemplate={columnTemplate}>
                     {[
                         t.title,
                         <select

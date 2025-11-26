@@ -3,11 +3,9 @@ import TicketList from '@/features/ticket-list/TicketList';
 import TicketFilters from '@/features/ticket-list/TicketFilters'; 
 import { ticketApi } from '@/services/api/ticketApi';
 import { TicketPriority, TicketStatus } from '../types/ticketTypes';
-import { useDispatch } from 'react-redux';
-import { ticketsReceived } from '../redux/slices/ticketSlice';
 import type { Ticket } from '@/entities/ticket';
 import type { Agent } from '@/entities/agent';
-import { agentApi } from '../services/api/agentApi';
+import { agentApi } from '../services/api/agentApi'; 
 
 // lazy loading modal
 const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModal'));
@@ -20,14 +18,8 @@ const TicketListPage = () => {
     const [status, setStatus] = useState<string>('');
 
     // for editing existing ticket (future requirements)
-    const [ticket, setTicket] = useState<Ticket>();
-    const dispatch = useDispatch();
+    const [ticket, setTicket] = useState<Ticket>(); 
      
-    const handleFiltering = async () => {
-        const tickets = await ticketApi.getTickets({ status, priority });
-        dispatch(ticketsReceived(tickets));
-    }
-
     const handleUpdateClick = useCallback(async (ticket: Ticket) => {
         await ticketApi.updateTicket(ticket.id, ticket);
     }, [])
@@ -36,30 +28,22 @@ const TicketListPage = () => {
         await ticketApi.deleteTicket(id); 
     }, [])
 
-const handlePrioritySelect = useCallback((val: TicketPriority) => {
-  setPriority(TicketPriority[val]);
-}, []);
+    const handlePrioritySelect = useCallback((val: TicketPriority) => {
+      setPriority(TicketPriority[val]);
+    }, []);
 
-const handleStatusSelect = useCallback((val: TicketStatus) => {
-  setStatus(TicketStatus[val]);
-}, []);
-
-    const getAgents = async () => {
-        const all = await agentApi.getAgents();
-        setAgents(all);
-    }
-
-    useEffect(() => {
-        getAgents();
+    const handleStatusSelect = useCallback((val: TicketStatus) => {
+      setStatus(TicketStatus[val]);
     }, []);
 
     useEffect(() => {
-        // if any filter has been touched
-        if (priority !== '' || status !== '') {
-            handleFiltering();
-        }
-    }, [priority, status]);
-      
+        const getAgents = async () => {
+            const all = await agentApi.getAgents();
+            setAgents(all);
+        };
+        getAgents();
+    }, []);
+       
     return (
         <div>
             <div style={{ display: 'flex' }}>
@@ -73,7 +57,12 @@ const handleStatusSelect = useCallback((val: TicketStatus) => {
                     style={{ marginLeft: 'auto' }}>Create</button>
             </div>
 
-            <TicketList agents={agents} onUpdate={handleUpdateClick} onDelete={handleDeleteClick} />
+            <TicketList 
+                agents={agents} 
+                onUpdate={handleUpdateClick} 
+                onDelete={handleDeleteClick}
+                filters={{ status, priority }}
+            />
 
             {isModalOpen && (
                 <Suspense fallback={<div>Loading modal...</div>}>

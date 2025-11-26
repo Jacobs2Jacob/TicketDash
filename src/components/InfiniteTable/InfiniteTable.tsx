@@ -1,4 +1,4 @@
-﻿import type { CSSProperties, ReactNode } from 'react';
+﻿import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styles from './InfiniteTable.module.css';
 import { InfiniteTableHeader } from './InfiniteTableHeader';
@@ -23,6 +23,10 @@ interface InfiniteTableProps {
     className?: string;
 }
 
+export const buildColumnTemplate = (columns: Column[], defaultWidth?: number) => {
+    return columns.map(c => c.width || `${defaultWidth ?? 1}fr`).join(' ');
+}
+
 export const InfiniteTable = ({
     columns,
     dataLength,
@@ -36,14 +40,16 @@ export const InfiniteTable = ({
     className,
 }: InfiniteTableProps) => {
 
-    const gridTemplate = columns.map((c) => c.width || '1fr').join(' ');
+    const columnTemplate = useMemo(() => {
+        return buildColumnTemplate(columns);
+    }, [columns]);
 
     return (
         <div
             className={`${styles.container} ${className || ''}`}
             style={{ height, marginTop: '5px' }}
         >
-            <InfiniteTableHeader columns={columns} gridTemplate={gridTemplate} />
+            <InfiniteTableHeader columns={columns} gridTemplate={columnTemplate} />
 
             <div id="scrollableDiv" className={styles.scrollable}>
                 <InfiniteScroll

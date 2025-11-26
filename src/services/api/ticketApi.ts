@@ -9,12 +9,19 @@ export interface TicketQueryParams {
     sort?: string;  
     offset?: number;
 }; 
- 
+
+export interface TicketApiResponse {
+    items: Ticket[];
+    page: number;
+    pageSize: number;
+    total: number;
+};
+
 export const ticketApi = {
-      
-    getTickets: async (params?: TicketQueryParams) => {
-        const res = await axiosClient.get<{ items: Ticket[] }>('/tickets', { params });
-        return res.data.items ?? res.data;
+
+    getTickets: async (params?: TicketQueryParams): Promise<TicketApiResponse> => {
+        const res = await axiosClient.get<TicketApiResponse>('/tickets', { params });
+        return res.data;
     }, 
     getTicketById: async (id: string) => {
         const res = await axiosClient.get<Ticket>(`/tickets/${id}`);
