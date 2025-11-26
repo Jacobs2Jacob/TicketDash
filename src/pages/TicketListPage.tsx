@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useCallback, useState } from 'react';
+import { lazy, Suspense, useEffect, useCallback, useState, useMemo } from 'react';
 import TicketList from '@/features/ticket-list/TicketList';
 import TicketFilters from '@/features/ticket-list/TicketFilters'; 
 import { ticketApi } from '@/services/api/ticketApi';
@@ -43,6 +43,10 @@ const TicketListPage = () => {
         };
         getAgents();
     }, []);
+
+    // memoize filters to prevent unnecessary re-renders
+    const filters = useMemo(() => ({ status, priority }),
+        [status, priority]);
        
     return (
         <div>
@@ -61,7 +65,7 @@ const TicketListPage = () => {
                 agents={agents} 
                 onUpdate={handleUpdateClick} 
                 onDelete={handleDeleteClick}
-                filters={{ status, priority }}
+                filters={filters}
             />
 
             {isModalOpen && (
