@@ -35,7 +35,7 @@ For handling theme contexts and other light weight non-frequent updated features
 For configuration simplicity, fast dev server and modern codebase.  
   
 **React Patterns used in this app:**  
-**-Hooks**  
+**-Custom Hooks**  
 **-Compounds**  
-**-Presentational components and logic containers**  
+**-Feature and Reusable components**  
 **-Layout Pattern** with one parent for both child to reduce loading times on unmount and hold the shared data in parent
