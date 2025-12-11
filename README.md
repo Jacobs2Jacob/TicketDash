@@ -5,7 +5,7 @@
 -Run unit tests with npm test.  
   
 **Architectural Decisions**  
-**-Feature-driven:**  
+**-FSD:**  
 A common and scalable approach that isolates feature components from shared components (reusable across multiple features).  
 **-Smart Routes:**  
 For supporting future route based components and better scalability.  
