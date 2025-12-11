@@ -12,21 +12,26 @@ export const useInfiniteTickets = (filters?: { status?: string; priority?: strin
     const pageSize = 30;
 
     const query = useInfiniteQuery<TicketApiResponse, Error>({
-        queryKey: ['tickets', filters?.status, filters?.priority],
+        queryKey: ['tickets', {
+            status: filters?.status ?? null,
+            priority: filters?.priority ?? null,
+            pageSize,
+        }],
         queryFn: async ({ pageParam = 1 }) => {
-            return await ticketApi.getTickets({
+            return ticketApi.getTickets({
                 page: pageParam as number,
-                pageSize: pageSize,
-                ...(filters?.status && { status: filters.status }),
-                ...(filters?.priority && { priority: filters.priority }),
+                pageSize,
+                status: filters?.status,
+                priority: filters?.priority,
             });
         },
         getNextPageParam: (lastPage, allPages) => {
-            return allPages.flatMap(fm => fm.items).length < (allPages[0]?.total ?? 0) 
-                ? allPages.length + 1 
+            return allPages.flatMap(f => f.items).length <
+                (allPages[0]?.total ?? 0)
+                ? allPages.length + 1
                 : undefined;
         },
-        initialPageParam: 1
+        initialPageParam: 1,
     });
 
     useEffect(() => {
