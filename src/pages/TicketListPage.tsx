@@ -1,11 +1,11 @@
 import { lazy, Suspense, useEffect, useCallback, useState, useMemo } from 'react';
 import TicketList from '@/features/ticket-list/TicketList';
-import TicketFilters from '@/features/ticket-list/TicketFilters'; 
-import { ticketApi } from '@/services/api/ticketApi';
-import { TicketPriority, TicketStatus } from '../types/ticketTypes';
-import type { Ticket } from '@/entities/ticket';
-import type { Agent } from '@/entities/agent';
-import { agentApi } from '../services/api/agentApi'; 
+import TicketFilters from '@/features/ticket-list/TicketFilters';
+import { ticketApi } from '@/entities/tickets/api/ticketApi';
+import { TicketPriority, TicketStatus } from '@/entities/tickets/types/ticketTypes';
+import type { Ticket } from '@/entities/tickets/model/ticket';
+import type { Agent } from '@/entities/agents/model/agent';
+import { agentApi } from '@/entities/agents/api/agentApi'; 
 
 // lazy loading modal
 const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModal'));

@@ -1,16 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
-import { useInfiniteTickets } from '@/hooks/useInfiniteTickets'; 
-import { TicketPriority, TicketStatus } from '@/types/ticketTypes';
-import { InfiniteTable, type Column } from '@/components/InfiniteTable/InfiniteTable';
-import InfiniteTableRow from '@/components/InfiniteTable/InfiniteTableRow';
-import type { Ticket } from '../../entities/ticket';
-import type { Agent } from '../../entities/agent';
-import { TrashIcon } from "@/components/Icons/icons";
-import { useViewport } from '../../hooks/useViewport';
-import InfiniteTableRowMobile from '../../components/InfiniteTable/InfiniteTableRowMobile';
+import React, { useCallback, useMemo } from 'react'; 
 import { useSelector } from 'react-redux';
-import { selectAllTickets } from '../../redux/selectors/ticketSelectors';
-import { buildColumnTemplate } from '@/components/InfiniteTable/InfiniteTable';
+import { selectAllTickets } from '../../redux/selectors/ticketSelectors'; 
+import type { Agent } from '../../entities/agents/model/agent';
+import { useInfiniteTickets } from '../../entities/tickets/hooks/useInfiniteTickets';
+import type { Ticket } from '../../entities/tickets/model/ticket';
+import { TicketStatus, TicketPriority } from '../../entities/tickets/types/ticketTypes';
+import { TrashIcon } from '../../shared/components/Icons/icons';
+import { type Column, buildColumnTemplate, InfiniteTable } from '../../shared/components/InfiniteTable/InfiniteTable';
+import InfiniteTableRow from '../../shared/components/InfiniteTable/InfiniteTableRow';
+import InfiniteTableRowMobile from '../../shared/components/InfiniteTable/InfiniteTableRowMobile';
+import { useViewport } from '../../shared/hooks/useViewport';
 
 interface TicketListProps {
     onUpdate: (ticket: Ticket) => void;

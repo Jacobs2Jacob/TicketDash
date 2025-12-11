@@ -1,11 +1,8 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { ticketApi } from '@/services/api/ticketApi'; 
+import { useInfiniteQuery } from '@tanstack/react-query'; 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux'; 
-import { 
-    ticketsReceived,
-} from '../redux/slices/ticketSlice';
-import type { TicketApiResponse } from '@/services/api/ticketApi';
+import { useDispatch } from 'react-redux';   
+import { ticketsReceived } from '@/redux/slices/ticketSlice';
+import { type TicketApiResponse, ticketApi } from '../api/ticketApi';
 
 export const useInfiniteTickets = (filters?: { status?: string; priority?: string }) => {
     const dispatch = useDispatch();

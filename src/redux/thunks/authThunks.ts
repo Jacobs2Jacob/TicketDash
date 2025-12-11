@@ -1,16 +1,18 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { authApi } from '@/services/api/authApi';
+﻿import { createAsyncThunk } from '@reduxjs/toolkit';
+import { authApi } from '@/entities/auth/api/authApi';
 
 export const loginThunk = createAsyncThunk(
     'auth/login',
     async (_, thunkAPI) => {
         try {
-            // Backend sets HttpOnly cookie
-            const res = await authApi.login();
+            const res = await authApi.getCurrentUser();
+
+            // user exists
             return res.data;
-        } catch (error: any) {
-            // Let interceptor + middleware handle global errors
-            return thunkAPI.rejectWithValue(error);
+        } catch {
+            await authApi.login();
+            const res = await authApi.getCurrentUser();
+            return res.data;
         }
     }
-);
+); 

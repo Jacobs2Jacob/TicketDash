@@ -33,12 +33,11 @@ export const authSlice = createSlice({
             .addCase(loginThunk.rejected, (state) => {
                 state.loading = false;
                 state.error = 'Login failed';
-            });
+            })
     }
 });
 
-export const {
-    //logout
+export const { 
 } = authSlice.actions;
 
 export default authSlice.reducer;

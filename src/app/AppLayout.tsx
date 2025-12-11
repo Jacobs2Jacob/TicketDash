@@ -1,6 +1,6 @@
-import { useTheme } from '@/hooks/useTheme';
+import { ColorAccessibilityIcon } from '../shared/components/Icons/icons';
+import { useTheme } from '../shared/hooks/useTheme';
 import styles from './AppLayout.module.css';
-import { ColorAccessibilityIcon } from '@/components/Icons/icons';
   
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
     const { toggleTheme } = useTheme();

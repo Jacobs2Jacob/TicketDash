@@ -1,4 +1,4 @@
-import { TicketPriority, TicketStatus } from "../../types/ticketTypes";
+import { TicketStatus, TicketPriority } from "../../entities/tickets/types/ticketTypes";
 
 interface TicketFiltersProps {
     onStatusSelect: (status: TicketStatus) => void;

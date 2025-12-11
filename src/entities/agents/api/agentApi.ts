@@ -1,6 +1,6 @@
-import { axiosClient } from './axiosClient';
-import type { Agent } from '../../entities/agent';
- 
+import { axiosClient } from "@/shared/api/axiosClient";
+import type { Agent } from "../model/agent";
+
 export const agentApi = {
 
     getAgents: async () => {

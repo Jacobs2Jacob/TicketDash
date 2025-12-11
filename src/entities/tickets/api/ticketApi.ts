@@ -1,5 +1,5 @@
-import { axiosClient } from './axiosClient';
-import type { Ticket } from '../../entities/ticket';
+import { axiosClient } from "../../../shared/api/axiosClient";
+import type { Ticket } from "../model/ticket";
 
 export interface TicketQueryParams {
     page?: number;

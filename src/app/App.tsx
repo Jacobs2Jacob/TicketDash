@@ -1,9 +1,9 @@
 ﻿import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import AppLayout from './AppLayout';
-import { AppRoutes } from './routes'; 
-import { loginThunk } from '../redux/thunks/authThunks';
+import { AppRoutes } from './routes';  
 import { useAppDispatch } from '@/redux/hooks/useAppDispatch'; 
+import { loginThunk } from '../redux/thunks/authThunks';
 
 const App = () => {
 
