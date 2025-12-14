@@ -1,11 +1,11 @@
 ﻿import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import Button from '@/components/Button/Button';
-import { ticketApi } from '@/services/api/ticketApi';
-import type { Ticket } from '@/entities/ticket';
-import { TicketPriority } from '../../types/ticketTypes';
-import Modal from '../../components/Modal/Modal';
+import { useForm } from 'react-hook-form'; 
 import styles from './TicketModal.module.css';
+import { ticketApi } from '../../entities/tickets/api/ticketApi';
+import type { Ticket } from '../../entities/tickets/model/ticket';
+import { TicketPriority } from '../../entities/tickets/types/ticketTypes';
+import Button from '../../shared/components/Button/Button';
+import Modal from '../../shared/components/Modal/Modal';
 
 type TicketModalProps = {
     open: boolean;

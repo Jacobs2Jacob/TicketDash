@@ -1,7 +1,8 @@
-﻿import { agentApi } from '../services/api/agentApi';
-import { axiosClient } from '../services/api/axiosClient';
-import type { Agent } from '../entities/agent';
+﻿import { axiosClient } from "../../../shared/api/axiosClient";
+import { agentApi } from "../api/agentApi";
+import type { Agent } from "../model/agent";
 
+ 
 jest.mock('../services/api/axiosClient', () => ({
     axiosClient: {
         get: jest.fn(),

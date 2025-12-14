@@ -3,7 +3,7 @@ import { authApi } from '@/entities/auth/api/authApi';
 
 export const loginThunk = createAsyncThunk(
     'auth/login',
-    async (_, thunkAPI) => {
+    async (_) => {
         try {
             const res = await authApi.getCurrentUser();
 

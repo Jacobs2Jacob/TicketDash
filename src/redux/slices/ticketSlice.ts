@@ -1,13 +1,12 @@
 ﻿import { createSlice, createEntityAdapter, type PayloadAction } from '@reduxjs/toolkit';
-import type { Ticket } from '@/entities/ticket';
- 
+import type { Ticket } from '../../entities/tickets/model/ticket';
+  
 export const ticketsAdapter = createEntityAdapter<Ticket, string>({
     selectId: (t) => t.id,
     sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
 });
 
-const initialState = ticketsAdapter.getInitialState({ 
-});
+const initialState = ticketsAdapter.getInitialState({});
 
 const ticketsSlice = createSlice({
     name: 'tickets',

@@ -1,5 +1,5 @@
-import type { TicketPriority, TicketStatus } from "@/types/ticketTypes";
- 
+import type { TicketPriority, TicketStatus } from "../types/ticketTypes";
+
 export interface Ticket {
     id: string;
     title: string;

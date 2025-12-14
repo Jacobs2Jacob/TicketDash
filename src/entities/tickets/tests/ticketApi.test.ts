@@ -1,6 +1,6 @@
-﻿import { ticketApi } from '../services/api/ticketApi';
-import { axiosClient } from '../services/api/axiosClient';
-import type { Ticket } from '../entities/ticket';
+﻿import { axiosClient } from '../../../shared/api/axiosClient';
+import { ticketApi } from '../api/ticketApi';
+import type { Ticket } from '../model/ticket';
 import { TicketPriority, TicketStatus } from '../types/ticketTypes';
 
 // Mock the axios client

@@ -22,7 +22,7 @@ export const useInfiniteTickets = (filters?: { status?: string; priority?: strin
                 priority: filters?.priority,
             });
         },
-        getNextPageParam: (lastPage, allPages) => {
+        getNextPageParam: (_, allPages) => {
             return allPages.flatMap(f => f.items).length <
                 (allPages[0]?.total ?? 0)
                 ? allPages.length + 1
