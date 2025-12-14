@@ -44,13 +44,13 @@ const TicketList = (props: TicketListProps) => {
         return buildColumnTemplate(columns);
     }, [columns]);
 
-    const handeleTicketDelete = useCallback(async (id: string) => {
+    const handeleTicketDelete = (id: string) => {
         props.onDelete(id);
-    }, [props.onDelete])
+    }
 
-    const handeleTicketUpdate = useCallback(async (ticket: Ticket) => {
+    const handeleTicketUpdate = (ticket: Ticket) => {
         props.onUpdate(ticket);
-    }, [props.onUpdate])
+    }
 
     if (isLoading) {
         return <p>Loading tickets...</p>;
