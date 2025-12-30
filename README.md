@@ -10,8 +10,8 @@ A common and scalable approach that isolates feature components from shared comp
 **-Smart Routes:**  
 For supporting future route based components and better scalability.  
 **-React Query:**  
-Along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.
-Act as the source of truth for Tickets.
+Act as the source of truth for Tickets.  
+For pagination used along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.  
 **-Jest:**  
 For unit testing of core API functionality.  
 **-Signalr:**  
