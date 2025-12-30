@@ -10,7 +10,8 @@ A common and scalable approach that isolates feature components from shared comp
 **-Smart Routes:**  
 For supporting future route based components and better scalability.  
 **-React Query:**  
-Along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.  
+Along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.
+Act as the source of truth for Tickets.
 **-Jest:**  
 For unit testing of core API functionality.  
 **-Signalr:**  
@@ -22,10 +23,7 @@ For scoped, maintainable styling with light/dark theme support through a theme c
 **-TypeScript:**  
 For strong type safety and consistency between client and server models.  
 **-Redux:**  
-Tickets are a core and dynamic part of the app.  
-Redux provides a predictable, centralized way to manage this data, and the Entity Adapter simplifies handling frequent updates and normalized state.  
-As the app evolves using the ticket states can be easily shared across the components.  
-In addition, Redux middleware integrates well with real-time updates via WebSockets.  
+Redux middleware integrates well with real-time updates via WebSockets as well as Authentication flow (Thunks).  
 **-Error Handling:**  
 Global: Interceptor -> Middleware -> UI  
 Local: try/catch state  
