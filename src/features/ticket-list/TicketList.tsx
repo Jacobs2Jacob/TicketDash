@@ -1,6 +1,4 @@
-import React, { useCallback, useMemo } from 'react'; 
-import { useSelector } from 'react-redux';
-import { selectAllTickets } from '../../redux/selectors/ticketSelectors'; 
+import React, { useMemo } from 'react';  
 import type { Agent } from '../../entities/agents/model/agent';
 import { useInfiniteTickets } from '../../entities/tickets/hooks/useInfiniteTickets';
 import type { Ticket } from '../../entities/tickets/model/ticket';
@@ -19,15 +17,15 @@ interface TicketListProps {
 }
 
 const TicketList = (props: TicketListProps) => {
-
-    const storeTickets = useSelector(selectAllTickets);
+     
     const viewport = useViewport();
 
     const { 
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-        isLoading
+        isLoading,
+        data
     } = useInfiniteTickets(props.filters);
      
     const columns: Column[] = useMemo(() => [
@@ -57,14 +55,14 @@ const TicketList = (props: TicketListProps) => {
     } 
 
     return (
-        <InfiniteTable
+        data && <InfiniteTable
             columns={columns}
-            dataLength={storeTickets.length}
+            dataLength={data.length}
             hasMore={!!hasNextPage}
             next={fetchNextPage}
             loader={<p>Loading more tickets...</p>}
         >
-            {storeTickets.map((t) => {
+            {data.map((t) => {
                 return viewport == 'mobile' ? <InfiniteTableRowMobile 
                     key={t.id}
                     columns={columns}

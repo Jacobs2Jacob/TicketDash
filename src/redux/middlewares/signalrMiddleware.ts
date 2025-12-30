@@ -1,21 +1,20 @@
 import { type Middleware } from '@reduxjs/toolkit';
 import * as signalR from '@microsoft/signalr';
-import {  
-    ticketAdded,
-    ticketDeleted,
-    ticketUpdated,
-} from '@/redux/slices/ticketSlice';
+import { queryClient } from '../../app/providers/ReactQueryProvider';
+import type { InfiniteData } from '@tanstack/react-query';
+import type { TicketApiResponse } from '../../entities/tickets/api/ticketApi';
+import type { Ticket } from '../../entities/tickets/model/ticket';
 
 // exponential reconnection
-const makeDelays = () =>
-    [0, 1000, 2000, 4000, 8000, 16000]
-        .map((d) => d + Math.random() * 300);
+const makeDelays = () => [0, 1000, 2000, 4000, 8000, 16000]
+    .map(d => d + Math.random() * 300);
 
-export const signalrMiddleware: Middleware = (store) => {
+export const signalrMiddleware: Middleware = () => {
     let connection: signalR.HubConnection | null = null;
     let connecting = false;
 
     const start = async () => {
+
         if (connecting) {
             return;
         }
@@ -29,50 +28,84 @@ export const signalrMiddleware: Middleware = (store) => {
                 const hubUrl = import.meta.env.VITE_SOCKET_HUB;
 
                 connection = new signalR.HubConnectionBuilder()
-                    .withUrl(hubUrl, {
-                        withCredentials: true
-                    })
+                    .withUrl(hubUrl, { withCredentials: true })
                     .withAutomaticReconnect()
                     .build();
 
-                connection.on('TicketCreated', (ticket) => {
-                    store.dispatch(ticketAdded(ticket));
+                // Ticket CREATED
+                connection.on('TicketCreated', (_: Ticket) => {
+                    queryClient.invalidateQueries({
+                        queryKey: ['tickets'],
+                    });
                 });
 
-                connection.on('TicketUpdated', (payload) => {
-                    const { ...ticket } = payload;
-                    console.log(ticket);
-                    store.dispatch(
-                        ticketUpdated(ticket)
+                // Ticket UPDATED
+                connection.on('TicketUpdated', (ticket: Ticket) => {
+                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>(
+                        { queryKey: ['tickets'] },
+                        old => {
+
+                            if (!old) {
+                                return old;
+                            }
+
+                            return {
+                                ...old,
+                                pages: old.pages.map(page => ({
+                                    ...page,
+                                    items: page.items.map(t =>
+                                        t.id === ticket.id ? ticket : t
+                                    ),
+                                })),
+                            };
+                        }
                     );
                 });
 
-                connection.on('TicketDeleted', (id: string) => {
-                    store.dispatch(ticketDeleted(id));
+                // Ticket DELETED
+                connection.on('TicketDeleted', (deletedId: string) => {
+                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>(
+                        { queryKey: ['tickets'] },
+                        old => {
+
+                            if (!old) {
+                                return old;
+                            }
+
+                            return {
+                                ...old,
+                                pages: old.pages.map(page => ({
+                                    ...page,
+                                    items: page.items.filter(t => t.id !== deletedId),
+                                })),
+                            };
+                        }
+                    );
                 });
 
                 connection.onreconnecting(() => {
-                    // for caching later
-                    //store.dispatch(markTicketsStale());
+                    // optional: mark stale / show banner
                 });
 
                 connection.onreconnected(() => {
-                    // for caching later
-                    //store.dispatch(markTicketsStale());
+                    // resync after reconnect
+                    queryClient.invalidateQueries({
+                        queryKey: ['tickets'],
+                    });
                 });
 
                 await connection.start();
                 connecting = false;
                 return;
-            } catch (err) {
-                await new Promise((res) => setTimeout(res, delay));
+            } catch {
+                await new Promise(res => setTimeout(res, delay));
             }
         }
+
         connecting = false;
     };
 
-    // start once
     start();
 
-    return (next) => (action) => next(action);
+    return next => action => next(action);
 };
