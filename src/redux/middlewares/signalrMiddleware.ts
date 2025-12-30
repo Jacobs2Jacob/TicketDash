@@ -40,26 +40,10 @@ export const signalrMiddleware: Middleware = () => {
                 });
 
                 // Ticket UPDATED
-                connection.on('TicketUpdated', (ticket: Ticket) => {
-                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>(
-                        { queryKey: ['tickets'] },
-                        old => {
-
-                            if (!old) {
-                                return old;
-                            }
-
-                            return {
-                                ...old,
-                                pages: old.pages.map(page => ({
-                                    ...page,
-                                    items: page.items.map(t =>
-                                        t.id === ticket.id ? ticket : t
-                                    ),
-                                })),
-                            };
-                        }
-                    );
+                connection.on('TicketUpdated', (_: Ticket) => {
+                    queryClient.invalidateQueries({
+                        queryKey: ['tickets'],
+                    });
                 });
 
                 // Ticket DELETED
@@ -98,6 +82,7 @@ export const signalrMiddleware: Middleware = () => {
                 connecting = false;
                 return;
             } catch {
+                // wait before retrying
                 await new Promise(res => setTimeout(res, delay));
             }
         }
