@@ -53,10 +53,38 @@ export const signalrMiddleware: Middleware = () => {
 
                 // Ticket UPDATED
                 connection.on('TicketUpdated', (_: Ticket) => {
-                    queryClient.invalidateQueries({
-                        queryKey: ['tickets'],
-                    });
-                });
+
+                   queryClient.setQueriesData({ queryKey: ['tickets'] },
+                    (old) => {
+                       if (!old) {
+                         return old
+                       }
+
+                       const oldTicket = old.items.find(t => t.id === updated.id)
+
+                       // If this list never had the ticket, do nothing
+                       if (!oldTicket) return old
+
+                       // Decide using oldTicket + updated
+                       if (
+                        oldTicket.status === updated.status &&
+                        oldTicket.priority === updated.priority
+                       ) {
+                       // membership unchanged - replace
+                       return {
+                         ...old,
+                         items: old.items.map(t =>
+                         t.id === updated.id ? updated : t),
+                       }
+                   }
+
+                   // membership changed - remove
+                   return {
+                     ...old,
+                     items: old.items.filter(t => t.id !== updated.id),
+                   }
+                 })
+               });
 
                 // Ticket DELETED
                 connection.on('TicketDeleted', (deletedId: string) => {
