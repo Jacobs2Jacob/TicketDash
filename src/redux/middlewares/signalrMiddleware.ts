@@ -9,6 +9,8 @@ import type { Ticket } from '../../entities/tickets/model/ticket';
 const makeDelays = () => [0, 1000, 2000, 4000, 8000, 16000]
     .map(d => d + Math.random() * 300);
 
+let invalidateTimeout;
+
 export const signalrMiddleware: Middleware = () => {
     let connection: signalR.HubConnection | null = null;
     let connecting = false;
@@ -34,9 +36,19 @@ export const signalrMiddleware: Middleware = () => {
 
                 // Ticket CREATED
                 connection.on('TicketCreated', (_: Ticket) => {
-                    queryClient.invalidateQueries({
+                    
+                     if (invalidateTimeout) {
+                        return;
+                     }
+
+                     invalidateTimeout = setTimeout(() => {
+                        queryClient.invalidateQueries({
                         queryKey: ['tickets'],
-                    });
+                        refetchType: 'none',
+                     })
+
+                     invalidateTimeout = null;
+                   }, 1000)
                 });
 
                 // Ticket UPDATED
