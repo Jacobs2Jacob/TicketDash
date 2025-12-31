@@ -9,7 +9,7 @@ import type { Ticket } from '../../entities/tickets/model/ticket';
 const makeDelays = () => [0, 1000, 2000, 4000, 8000, 16000]
     .map(d => d + Math.random() * 300);
 
-let invalidateTimeout;
+let invalidateTimeout: number | null;
 
 export const signalrMiddleware: Middleware = () => {
     let connection: signalR.HubConnection | null = null;
@@ -52,18 +52,22 @@ export const signalrMiddleware: Middleware = () => {
                 });
 
                 // Ticket UPDATED
-                connection.on('TicketUpdated', (_: Ticket) => {
+                connection.on('TicketUpdated', (updated: Ticket) => {
 
-                   queryClient.setQueriesData({ queryKey: ['tickets'] },
+                   queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
                     (old) => {
                        if (!old) {
                          return old
                        }
 
-                       const oldTicket = old.items.find(t => t.id === updated.id)
+                       const oldTicket = old.pages
+                            .flatMap(f => f.items)
+                            .find(t => t.id === updated.id)
 
                        // If this list never had the ticket, do nothing
-                       if (!oldTicket) return old
+                       if (!oldTicket) {
+                          return old
+                       }
 
                        // Decide using oldTicket + updated
                        if (
@@ -73,23 +77,25 @@ export const signalrMiddleware: Middleware = () => {
                        // membership unchanged - replace
                        return {
                          ...old,
-                         items: old.items.map(t =>
-                         t.id === updated.id ? updated : t),
+                         items: old.pages
+                            .flatMap(f => f.items)
+                            .map(t => t.id === updated.id ? updated : t),
                        }
                    }
 
                    // membership changed - remove
                    return {
                      ...old,
-                     items: old.items.filter(t => t.id !== updated.id),
+                     items: old.pages
+                        .flatMap(f => f.items)
+                        .filter(t => t.id !== updated.id),
                    }
                  })
                });
 
                 // Ticket DELETED
                 connection.on('TicketDeleted', (deletedId: string) => {
-                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>(
-                        { queryKey: ['tickets'] },
+                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
                         old => {
 
                             if (!old) {
@@ -105,10 +111,6 @@ export const signalrMiddleware: Middleware = () => {
                             };
                         }
                     );
-                });
-
-                connection.onreconnecting(() => {
-                    // optional: mark stale / show banner
                 });
 
                 connection.onreconnected(() => {

@@ -26,9 +26,10 @@ export const useInfiniteTickets = (filters?: { status?: string; priority?: strin
                 : undefined;
         },
         initialPageParam: 1,
+        // Infinite stale time so ws handles updates
         staleTime: Infinity,
         gcTime: 30 * 60 * 1000,
-        keepPreviousData: true,
+        // force refetch on window focus
         refetchOnWindowFocus: true,
     });
      
