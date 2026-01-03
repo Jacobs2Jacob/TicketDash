@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 /.vs/TicketDash
 /obj/Debug
+*.esproj
+/CHANGELOG.md
