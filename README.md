@@ -4,6 +4,9 @@
 -Run the app with npm run dev.  
 -Run unit tests with npm test.  
   
+**Short Brief**  
+A super smooth, responsive, smart architecture and scalable CRUD SPA Real-Time React Dashboard for managing Tickets.  
+  
 **Architectural Decisions**  
 **-FSD:**  
 A common and scalable approach that isolates feature components from shared components (reusable across multiple features).  
