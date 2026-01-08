@@ -30,8 +30,8 @@ For strong type safety and consistency between client and server models.
 Redux middleware integrates well with real-time updates via WebSockets as well as Authentication flow (Thunks).  
 **-Error Handling:**  
 Network: Interceptor -> Middleware -> Component -> UI  
-Local: Hook -> Component -> UI
-Render: Error boundary -> UI
+Local: Hook -> Component -> UI  
+Render: Error boundary -> UI  
 **-Context-Api:**  
 For handling theme contexts and other light weight non-frequent updated features.  
 **-Vite:**  
