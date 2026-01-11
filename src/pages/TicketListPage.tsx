@@ -38,6 +38,7 @@ const TicketListPage = () => {
 
     useEffect(() => {
         const getAgents = async () => {
+            // TODO: move to entity hook and use react query
             const all = await agentApi.getAgents();
             setAgents(all);
         };
