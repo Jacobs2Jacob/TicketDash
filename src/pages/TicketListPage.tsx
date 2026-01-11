@@ -21,10 +21,12 @@ const TicketListPage = () => {
     const [ticket, setTicket] = useState<Ticket>(); 
      
     const handleUpdateClick = useCallback(async (ticket: Ticket) => {
+        // TODO: call entity hook mutation
         await ticketApi.updateTicket(ticket.id, ticket);
     }, [])
 
     const handleDeleteClick = useCallback(async (id: string) => {
+        // TODO: call entity hook mutation
         await ticketApi.deleteTicket(id); 
     }, [])
 
