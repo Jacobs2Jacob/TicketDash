@@ -54,6 +54,7 @@ export const signalrMiddleware: Middleware = () => {
                 // Ticket UPDATED
                 connection.on('TicketUpdated', (updated: Ticket) => {
 
+                   // TODO: move logic to entity hook
                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
                     (old) => {
                        if (!old) {
@@ -95,7 +96,9 @@ export const signalrMiddleware: Middleware = () => {
 
                 // Ticket DELETED
                 connection.on('TicketDeleted', (deletedId: string) => {
-                    queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
+                    
+                   // TODO: move logic to entity hook
+                   queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
                         old => {
 
                             if (!old) {
