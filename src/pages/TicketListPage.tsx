@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useCallback, useState, useMemo } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import TicketList from '@/features/ticket-list/TicketList';
 import TicketFilters from '@/features/ticket-list/TicketFilters';
 import { ticketApi } from '@/entities/tickets/api/ticketApi';
