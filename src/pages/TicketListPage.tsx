@@ -6,7 +6,7 @@ import { TicketPriority, TicketStatus } from '@/entities/tickets/types/ticketTyp
 import type { Ticket } from '@/entities/tickets/model/ticket';
 import type { Agent } from '@/entities/agents/model/agent';
 import { agentApi } from '@/entities/agents/api/agentApi'; 
-import { TicketModal } from '@/features/ticket-create-modal/TicketModal';
+import TicketModal from '@/features/ticket-create-modal/TicketModal';
 
 const TicketListPage = () => {
 
@@ -68,11 +68,11 @@ const TicketListPage = () => {
                 filters={filters}
             />
 
-            <TicketModal
+            {isModalOpen && <TicketModal
                 open={isModalOpen}
                 ticket={ticket}
                 onClose={() => setModalOpen(false)}
-            />
+            />}
         </div>
     );
 };
