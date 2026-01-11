@@ -6,9 +6,7 @@ import { TicketPriority, TicketStatus } from '@/entities/tickets/types/ticketTyp
 import type { Ticket } from '@/entities/tickets/model/ticket';
 import type { Agent } from '@/entities/agents/model/agent';
 import { agentApi } from '@/entities/agents/api/agentApi'; 
-
-// lazy loading modal
-const TicketModal = lazy(() => import('@/features/ticket-create-modal/TicketModal'));
+import { TicketModal } from '@/features/ticket-create-modal/TicketModal';
 
 const TicketListPage = () => {
 
@@ -70,15 +68,11 @@ const TicketListPage = () => {
                 filters={filters}
             />
 
-            {isModalOpen && (
-                <Suspense fallback={<div>Loading modal...</div>}>
-                    <TicketModal
-                        open={isModalOpen}
-                        ticket={ticket}
-                        onClose={() => setModalOpen(false)}
-                    />
-                </Suspense>
-            )}
+            <TicketModal
+                open={isModalOpen}
+                ticket={ticket}
+                onClose={() => setModalOpen(false)}
+            />
         </div>
     );
 };
