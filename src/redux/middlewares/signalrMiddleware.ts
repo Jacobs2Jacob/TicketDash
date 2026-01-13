@@ -1,9 +1,8 @@
 import { type Middleware } from '@reduxjs/toolkit';
 import * as signalR from '@microsoft/signalr';
 import { queryClient } from '../../app/providers/ReactQueryProvider';
-import type { InfiniteData } from '@tanstack/react-query';
-import type { TicketApiResponse } from '../../entities/tickets/api/ticketApi';
 import type { Ticket } from '../../entities/tickets/model/ticket';
+import { handleTicketUpdated, handleTicketDeleted } from '../../entities/tickets/hooks/useTicketCrud';
 
 // exponential reconnection
 const makeDelays = () => [0, 1000, 2000, 4000, 8000, 16000]
@@ -53,67 +52,12 @@ export const signalrMiddleware: Middleware = () => {
 
                 // Ticket UPDATED
                 connection.on('TicketUpdated', (updated: Ticket) => {
-
-                   // TODO: move logic to entity hook
-                   queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
-                    (old) => {
-                       if (!old) {
-                         return old
-                       }
-
-                       const oldTicket = old.pages
-                            .flatMap(f => f.items)
-                            .find(t => t.id === updated.id)
-
-                       // If this list never had the ticket, do nothing
-                       if (!oldTicket) {
-                          return old
-                       }
-
-                       // Decide using oldTicket + updated
-                       if (
-                        oldTicket.status === updated.status &&
-                        oldTicket.priority === updated.priority
-                       ) {
-                       // membership unchanged - replace
-                       return {
-                         ...old,
-                         items: old.pages
-                            .flatMap(f => f.items)
-                            .map(t => t.id === updated.id ? updated : t),
-                       }
-                   }
-
-                   // membership changed - remove
-                   return {
-                     ...old,
-                     items: old.pages
-                        .flatMap(f => f.items)
-                        .filter(t => t.id !== updated.id),
-                   }
-                 })
-               });
+                    handleTicketUpdated(updated);
+                });
 
                 // Ticket DELETED
                 connection.on('TicketDeleted', (deletedId: string) => {
-                    
-                   // TODO: move logic to entity hook
-                   queryClient.setQueriesData<InfiniteData<TicketApiResponse>>({ queryKey: ['tickets'] },
-                        old => {
-
-                            if (!old) {
-                                return old;
-                            }
-
-                            return {
-                                ...old,
-                                pages: old.pages.map(page => ({
-                                    ...page,
-                                    items: page.items.filter(t => t.id !== deletedId),
-                                })),
-                            };
-                        }
-                    );
+                    handleTicketDeleted(deletedId);
                 });
 
                 connection.onreconnected(() => {

@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form'; 
 import styles from './TicketModal.module.css';
-import { ticketApi } from '../../entities/tickets/api/ticketApi';
 import type { Ticket } from '../../entities/tickets/model/ticket';
 import { TicketPriority } from '../../entities/tickets/types/ticketTypes';
+import { useTicketCrud } from '../../entities/tickets/hooks/useTicketCrud';
 import Button from '../../shared/components/Button/Button';
 import Modal from '../../shared/components/Modal/Modal';
 
@@ -20,10 +20,11 @@ type TicketFormData = {
 };
 
 const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
+    const { createTicket, updateTicket, isCreating, isUpdating } = useTicketCrud();
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
         reset,
     } = useForm<TicketFormData>({
         defaultValues: {
@@ -32,6 +33,8 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
             priority: ticket?.priority ?? TicketPriority.Medium, 
         },
     });
+
+    const isSubmitting = isCreating || isUpdating;
 
     // Reset the form whenever a new ticket is passed (edit mode)
     useEffect(() => {
@@ -45,12 +48,10 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
     const onSubmit = async (data: TicketFormData) => {
         try {
             if (ticket) {
-                //await ticketApi.updateTicket(ticket.id, data);
+                //await updateTicket({ id: ticket.id, data });
             } else {
                 data.priority = Number(data.priority);
-                
-                // TODO: call entity hook mutation
-                await ticketApi.createTicket(data);
+                await createTicket(data);
             }
 
             onClose();

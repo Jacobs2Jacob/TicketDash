@@ -19,18 +19,25 @@ export const useInfiniteTickets = (filters?: { status?: string; priority?: strin
                 priority: filters?.priority,
             });
         },
-        getNextPageParam: (_, allPages) => {
-            return allPages.flatMap(f => f.items).length <
-                (allPages[0]?.total ?? 0)
+        getNextPageParam: (lastPage, allPages) => {
+            if (!lastPage.items.length) {
+                return undefined;
+            }
+
+            const loaded = allPages.reduce(
+                (sum, p) => sum + p.items.length,
+                0
+            );
+
+            return loaded < lastPage.total
                 ? allPages.length + 1
                 : undefined;
         },
         initialPageParam: 1,
         // Infinite stale time so ws handles updates
         staleTime: Infinity,
+        // How long data stays in cache when unused to avoid unbounded memory
         gcTime: 30 * 60 * 1000,
-        // force refetch on window focus
-        refetchOnWindowFocus: true,
     });
      
     return {
