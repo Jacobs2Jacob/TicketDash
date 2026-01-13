@@ -33,7 +33,8 @@ export const signalrMiddleware: Middleware = () => {
                     .withAutomaticReconnect()
                     .build();
 
-                // Ticket CREATED
+                // Ticket CREATED - Invalidate cache on creation, 
+                // Logic rules may apply and object may be restricted for current user.
                 connection.on('TicketCreated', (_: Ticket) => {
                     
                      if (invalidateTimeout) {
@@ -50,12 +51,12 @@ export const signalrMiddleware: Middleware = () => {
                    }, 1000)
                 });
 
-                // Ticket UPDATED
+                // Ticket UPDATED - update in place
                 connection.on('TicketUpdated', (updated: Ticket) => {
                     handleTicketUpdated(updated);
                 });
 
-                // Ticket DELETED
+                // Ticket DELETED - delete anyway
                 connection.on('TicketDeleted', (deletedId: string) => {
                     handleTicketDeleted(deletedId);
                 });
