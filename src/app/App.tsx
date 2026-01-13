@@ -11,7 +11,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(loginThunk());
-    }, []);
+    }, [dispatch]);
 
     return (
         <BrowserRouter>
