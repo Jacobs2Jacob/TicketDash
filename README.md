@@ -9,34 +9,34 @@
 • A super smooth, responsive, smart architecture and scalable CRUD SPA Real-Time React Dashboard for managing Tickets.  
   
 **Architectural Decisions**  
-**-FSD:**  
+**FSD:**  
 • A common and scalable approach that isolates feature components from shared components (reusable across multiple features).  
-**-Smart Routes:**  
+**Smart Routes:**  
 • For supporting future route based components and better scalability.  
 **-React Query:**  
 • Act as the source of truth for Tickets.  
 • For pagination used along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.  
-**-Jest:**  
+**Jest:**  
 • For unit testing of core API functionality.  
-**-Signalr:**  
+**Signalr:**  
 • For real-time updates, as it integrates best with .NET and provides stable WebSocket communication.  
-**-React Hook Form:**  
+**React Hook Form:**  
 • For a more maintainable and performant form experience with built-in validation.  
-**-CSS Modules:**  
+**CSS Modules:**  
 • For scoped, maintainable styling with light/dark theme support through a theme context.  
-**-TypeScript:**  
+**TypeScript:**  
 • For strong type safety and consistency between client and server models.  
-**-Redux:**  
+**Redux:**  
 • Redux middleware integrates well with real-time updates via WebSockets as well as Authentication flow (Thunks).  
-**-Url States:**  
+**Url States:**  
 • Make navigation state shareable, bookmarkable, and resilient to reloads.  
-**-Error Handling:**  
+**Error Handling:**  
 • Network: Interceptor -> Middleware -> Component -> UI  
 • Local: Hook -> Component -> UI  
 • Render: Error boundary -> UI  
-**-Context-Api:**  
+**Context-Api:**  
 • For handling theme contexts and other light weight non-frequent updated features.  
-**-Vite:**  
+**Vite:**  
 • For configuration simplicity, fast dev server and modern codebase.  
   
 **React Patterns used in this app:**  
