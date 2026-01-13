@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form'; 
 import styles from './TicketModal.module.css';
 import { ticketApi } from '../../entities/tickets/api/ticketApi';
@@ -48,6 +48,8 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                 //await ticketApi.updateTicket(ticket.id, data);
             } else {
                 data.priority = Number(data.priority);
+                
+                // TODO: call entity hook mutation
                 await ticketApi.createTicket(data);
             }
 
