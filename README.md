@@ -28,6 +28,8 @@ For scoped, maintainable styling with light/dark theme support through a theme c
 For strong type safety and consistency between client and server models.  
 **-Redux:**  
 Redux middleware integrates well with real-time updates via WebSockets as well as Authentication flow (Thunks).  
+**-Url States:**  
+Make navigation state shareable, bookmarkable, and resilient to reloads.  
 **-Error Handling:**  
 Network: Interceptor -> Middleware -> Component -> UI  
 Local: Hook -> Component -> UI  
