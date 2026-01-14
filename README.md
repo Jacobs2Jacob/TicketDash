@@ -1,18 +1,18 @@
 **To Execute:**  
--Make sure your client port is 5173.  
--Run npm install.  
--Run the app with npm run dev.  
--Run unit tests with npm test.  
+•  Make sure your client port is 5173.  
+•  Run npm install.  
+•  Run the app with npm run dev.  
+•  Run unit tests with npm test.  
   
 **Short Brief**  
 **Real-Time Ticket Support Dashboard**  
-A super smooth, responsive, smart architecture and scalable CRUD SPA Real-Time React Dashboard for managing Tickets.  
+• A super smooth, responsive, smart architecture and scalable CRUD SPA Real-Time React Dashboard for managing Tickets.  
   
 **Architectural Decisions**  
-**-FSD:**  
-A common and scalable approach that isolates feature components from shared components (reusable across multiple features).  
-**-Smart Routes:**  
-For supporting future route based components and better scalability.  
+**FSD:**  
+• A common and scalable approach that isolates feature components from shared components (reusable across multiple features).  
+**Smart Routes:**  
+• For supporting future route based components and better scalability.  
 **-React Query:**  
 Act as the source of truth for Tickets.  
 For pagination used along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.  
@@ -38,7 +38,7 @@ For handling theme contexts and other light weight non-frequent updated features
 For configuration simplicity, fast dev server and modern codebase.  
   
 **React Patterns used in this app:**  
-**-Custom Hooks**  
-**-Compounds**  
-**-Feature and Reusable components**  
-**-Layout Pattern** with one parent for both child to reduce loading times on unmount and hold the shared data in parent
+**• Custom Hooks**  
+**• Compounds**  
+**• Feature and Reusable components**  
+**• Layout Pattern** with one parent for both child to reduce loading times on unmount and hold the shared data in parent
