@@ -2,7 +2,7 @@ import { useCallback, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TicketList from '@/features/ticket-list/TicketList';
 import TicketFilters from '@/features/ticket-list/TicketFilters';
-import { TicketPriority, TicketStatus } from '@/entities/tickets/types/ticketTypes';
+import type { TicketPriority, TicketStatus } from '@/entities/tickets/types/ticketTypes';
 import type { Ticket } from '@/entities/tickets/model/ticket';
 import { useTicketCrud } from '@/entities/tickets/hooks/useTicketCrud';
 import { useAgents } from '@/entities/agents/hooks/useAgents';
@@ -33,7 +33,7 @@ const TicketListPage = () => {
     const handlePrioritySelect = useCallback((val: TicketPriority | null) => {
         const newParams = new URLSearchParams(searchParams);
         if (val !== null) {
-            newParams.set('priority', TicketPriority[val]);
+            newParams.set('priority', val);
         } else {
             newParams.delete('priority');
         }
@@ -43,7 +43,7 @@ const TicketListPage = () => {
     const handleStatusSelect = useCallback((val: TicketStatus | null) => {
         const newParams = new URLSearchParams(searchParams);
         if (val !== null) {
-            newParams.set('status', TicketStatus[val]);
+            newParams.set('status', val);
         } else {
             newParams.delete('status');
         }

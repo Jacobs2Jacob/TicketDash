@@ -1,4 +1,4 @@
-import { TicketStatus, TicketPriority } from "../../entities/tickets/types/ticketTypes";
+import type { TicketStatus, TicketPriority } from "../../entities/tickets/types/ticketTypes";
 
 interface TicketFiltersProps {
     currentStatus?: string;
@@ -10,12 +10,8 @@ interface TicketFiltersProps {
 const TicketFilters = (props: TicketFiltersProps) => {
     
     // Convert URL string values back to enum numbers for select value
-    const statusValue = props.currentStatus 
-        ? TicketStatus[props.currentStatus as keyof typeof TicketStatus] 
-        : '';
-    const priorityValue = props.currentPriority 
-        ? TicketPriority[props.currentPriority as keyof typeof TicketPriority] 
-        : '';
+    const statusValue = props.currentStatus;
+    const priorityValue = props.currentPriority;
     
     return (
         <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem' }}>
@@ -23,24 +19,24 @@ const TicketFilters = (props: TicketFiltersProps) => {
                 value={statusValue} 
                 onChange={(e) => {
                     const val = e.target.value;
-                    props.onStatusSelect(val === '' ? null : Number(val) as TicketStatus);
+                    props.onStatusSelect(val === '' ? null : val as TicketStatus);
                 }}>
                 <option value="">All statuses</option>
-                <option value={TicketStatus.Open}>Open</option>
-                <option value={TicketStatus.InProgress}>In Progress</option>
-                <option value={TicketStatus.Resolved}>Resolved</option>
+                <option value={'Open' as TicketStatus}>Open</option>
+                <option value={'InProgress' as TicketStatus}>In Progress</option>
+                <option value={'Resolved' as TicketStatus}>Resolved</option>
             </select>
             <select 
                 value={priorityValue} 
                 onChange={(e) => {
                     const val = e.target.value;
-                    props.onPrioritySelect(val === '' ? null : Number(val) as TicketPriority);
+                    props.onPrioritySelect(val === '' ? null : val as TicketPriority);
                 }}>
                 <option value="">All priorities</option>
-                <option value={TicketPriority.Low}>Low</option>
-                <option value={TicketPriority.Medium}>Medium</option>
-                <option value={TicketPriority.High}>High</option>
-                <option value={TicketPriority.Critical}>Critical</option>
+                <option value={'Low' as TicketPriority}>Low</option>
+                <option value={'Medium' as TicketPriority}>Medium</option>
+                <option value={'High' as TicketPriority}>High</option>
+                <option value={'Critical' as TicketPriority}>Critical</option>
             </select>
         </div>
     );

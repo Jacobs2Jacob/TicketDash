@@ -5,7 +5,7 @@ import type { InfiniteData } from '@tanstack/react-query';
 import type { TicketApiResponse } from '../api/ticketApi';
 import { queryClient } from '../../../app/providers/ReactQueryProvider';
 
-// Helper functions for SignalR cache updates (can be used outside React components)
+// Helper functions for Socket.io cache updates (can be used outside React components)
 export const handleTicketUpdated = (updated: Ticket) => {
     queryClient.setQueriesData<InfiniteData<TicketApiResponse>>(
         { queryKey: ['tickets'] },
@@ -13,7 +13,7 @@ export const handleTicketUpdated = (updated: Ticket) => {
             if (!old) {
                 return old;
             }
-
+            
             const oldTicket = old.pages
                 .flatMap((f) => f.items)
                 .find((t) => t.id === updated.id);
@@ -95,18 +95,18 @@ export const handleTicketDeleted = (deletedId: string) => {
 export const useTicketCrud = () => {
     const createMutation = useMutation({
         mutationFn: (data: Partial<Ticket>) => ticketApi.createTicket(data),
-        // Cache updates handled by SignalR websocket
+        // Cache updates handled by Socket.io websocket
     });
 
     const updateMutation = useMutation({
         mutationFn: ({ id, data }: { id: string; data: Partial<Ticket> }) =>
             ticketApi.updateTicket(id, data),
-        // Cache updates handled by SignalR websocket
+        // Cache updates handled by Socket.io websocket
     });
 
     const deleteMutation = useMutation({
         mutationFn: (id: string) => ticketApi.deleteTicket(id),
-        // Cache updates handled by SignalR websocket
+        // Cache updates handled by Socket.io websocket
     });
 
     return {

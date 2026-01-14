@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form'; 
 import styles from './TicketModal.module.css';
 import type { Ticket } from '../../entities/tickets/model/ticket';
-import { TicketPriority } from '../../entities/tickets/types/ticketTypes';
+import type { TicketPriority } from '../../entities/tickets/types/ticketTypes';
 import { useTicketCrud } from '../../entities/tickets/hooks/useTicketCrud';
 import Button from '../../shared/components/Button/Button';
 import Modal from '../../shared/components/Modal/Modal';
@@ -20,37 +19,26 @@ type TicketFormData = {
 };
 
 const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
-    const { createTicket, updateTicket, isCreating, isUpdating } = useTicketCrud();
+    const { createTicket, isCreating, isUpdating } = useTicketCrud();
     const {
         register,
         handleSubmit,
-        formState: { errors },
-        reset,
+        formState: { errors }
     } = useForm<TicketFormData>({
         defaultValues: {
             title: ticket?.title ?? '',
             description: ticket?.description ?? '',
-            priority: ticket?.priority ?? TicketPriority.Medium, 
+            priority: ticket?.priority ?? 'Medium', 
         },
     });
 
     const isSubmitting = isCreating || isUpdating;
-
-    // Reset the form whenever a new ticket is passed (edit mode)
-    useEffect(() => {
-        reset({
-            title: ticket?.title ?? '',
-            description: ticket?.description ?? '',
-            priority: ticket?.priority ?? TicketPriority.Medium
-        });
-    }, [ticket, reset]);
 
     const onSubmit = async (data: TicketFormData) => {
         try {
             if (ticket) {
                 //await updateTicket({ id: ticket.id, data });
             } else {
-                data.priority = Number(data.priority);
                 await createTicket(data);
             }
 
@@ -108,10 +96,10 @@ const TicketModal = ({ open, onClose, ticket }: TicketModalProps) => {
                         className={`${styles.select} ${errors.priority ? styles.inputError : ''}`}
                         disabled={isSubmitting}
                     >
-                        <option value={TicketPriority.Low}>Low</option>
-                        <option value={TicketPriority.Medium}>Medium</option>
-                        <option value={TicketPriority.High}>High</option>
-                        <option value={TicketPriority.Critical}>Critical</option>
+                        <option value={'Low' as TicketPriority}>Low</option>
+                        <option value={'Medium' as TicketPriority}>Medium</option>
+                        <option value={'High' as TicketPriority}>High</option>
+                        <option value={'Critical' as TicketPriority}>Critical</option>
                     </select>
                     {errors.priority && (
                         <div className={styles.errorLabel}>{errors.priority.message}</div>

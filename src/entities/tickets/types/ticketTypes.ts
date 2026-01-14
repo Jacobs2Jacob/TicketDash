@@ -1,12 +1,10 @@
-export enum TicketPriority {
-    Low = 0,
-    Medium = 1,
-    High = 2,
-    Critical = 3
-}
+export type TicketPriority = 
+    'Low' |
+    'Medium' |
+    'High' |
+    'Critical';
 
-export enum TicketStatus {
-    Open = 0,
-    InProgress = 1,
-    Resolved = 2
-}
+export type TicketStatus = 
+    'Open' |
+    'InProgress' |
+    'Resolved';

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'; 
-import { signalrMiddleware } from '@/redux/middlewares/signalrMiddleware';
+import { socketMiddleware } from '@/redux/middlewares/socketMiddleware';
 import { httpErrorMiddleware } from '@/redux/middlewares/httpErrorMiddleware';
 import authReducer from '@/redux/slices/authSlice';
 import httpErrorSlice from '@/redux/slices/httpErrorSlice';
@@ -12,7 +12,7 @@ export const store = configureStore({
     middleware: (getDefault) =>
         getDefault({
             serializableCheck: false,
-        }).concat(signalrMiddleware, httpErrorMiddleware),
+        }).concat(socketMiddleware, httpErrorMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

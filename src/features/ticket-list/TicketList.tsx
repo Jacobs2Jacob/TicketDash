@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import type { Agent } from '../../entities/agents/model/agent';
 import { useInfiniteTickets } from '../../entities/tickets/hooks/useInfiniteTickets';
 import type { Ticket } from '../../entities/tickets/model/ticket';
-import { TicketStatus, TicketPriority } from '../../entities/tickets/types/ticketTypes';
+import type { TicketStatus } from '../../entities/tickets/types/ticketTypes';
 import { TrashIcon } from '../../shared/components/Icons/icons';
 import { type Column, buildColumnTemplate, InfiniteTable } from '../../shared/components/InfiniteTable/InfiniteTable';
 import InfiniteTableRow from '../../shared/components/InfiniteTable/InfiniteTableRow';
@@ -70,16 +70,18 @@ const TicketList = (props: TicketListProps) => {
                     {[
                         t.title,
                         <select
+                            title='status'
                             value={t.status}
-                            onChange={(e) => handeleTicketUpdate({ ...t, status: Number(e.target.value) })}>
-                            <option value={TicketStatus.Open}>Open</option>
-                            <option value={TicketStatus.InProgress}>In Progress</option>
-                            <option value={TicketStatus.Resolved}>Resolved</option>
+                            onChange={(e) => handeleTicketUpdate({ ...t, status: e.target.value as TicketStatus })}>
+                            <option value={'Open' as TicketStatus}>Open</option>
+                            <option value={'InProgress' as TicketStatus}>In Progress</option>
+                            <option value={'Resolved' as TicketStatus}>Resolved</option>
                         </select>,
-                        TicketPriority[t.priority],
+                        t.priority,
                         new Date(t.createdAt).toLocaleString(),
                         new Date(t.updatedAt).toLocaleString(),
                         <select
+                            title='agent'
                             value={t.assigneeId ?? ''}
                             onChange={(e) => handeleTicketUpdate({ ...t, assigneeId: e.target.value })}>
                             {props.agents.map(agent => {
@@ -95,16 +97,18 @@ const TicketList = (props: TicketListProps) => {
                     {[
                         t.title,
                         <select
+                            title='status'
                             value={t.status}
-                            onChange={(e) => handeleTicketUpdate({ ...t, status: Number(e.target.value) })}>
-                            <option value={TicketStatus.Open}>Open</option>
-                            <option value={TicketStatus.InProgress}>In Progress</option>
-                            <option value={TicketStatus.Resolved}>Resolved</option>
+                            onChange={(e) => handeleTicketUpdate({ ...t, status: e.target.value as TicketStatus })}>
+                            <option value={'Open' as TicketStatus}>Open</option>
+                            <option value={'InProgress' as TicketStatus}>In Progress</option>
+                            <option value={'Resolved' as TicketStatus}>Resolved</option>
                         </select>,
-                        TicketPriority[t.priority],
+                        t.priority,
                         new Date(t.createdAt).toLocaleString(),
                         new Date(t.updatedAt).toLocaleString(),
                         <select
+                            title='agent'
                             value={t.assigneeId ?? ''}
                             onChange={(e) => handeleTicketUpdate({ ...t, assigneeId: e.target.value })}>
                             {props.agents.map(agent => {

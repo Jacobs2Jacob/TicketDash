@@ -18,8 +18,8 @@ Act as the source of truth for Tickets.
 For pagination used along with React Infinite Scroll Component to achieve optimal performance in heavy data scenarios without virtualization overhead.  
 **-Jest:**  
 For unit testing of core API functionality.  
-**-Signalr:**  
-For real-time updates, as it integrates best with .NET and provides stable WebSocket communication.  
+**-Socket.io:**  
+For real-time updates over WebSockets with automatic reconnection and transport fallbacks.  
 **-React Hook Form:**  
 For a more maintainable and performant form experience with built-in validation.  
 **-CSS Modules:**  
