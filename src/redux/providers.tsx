@@ -4,6 +4,7 @@ import { store } from './store';
 import { ThemeProvider } from '@/app/providers/ThemeProvider';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/app/providers/ReactQueryProvider';
+import { TicketsSocketProvider } from '@/app/providers/TicketsSocketProvider';
 
 type ProvidersProps = {
     children: ReactNode;
@@ -13,7 +14,9 @@ export const Providers = ({ children }: ProvidersProps) => {
     return (
         <Provider store={store}>
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider>{children}</ThemeProvider>
+                <TicketsSocketProvider>
+                    <ThemeProvider>{children}</ThemeProvider>
+                </TicketsSocketProvider>
             </QueryClientProvider>
         </Provider>
     );

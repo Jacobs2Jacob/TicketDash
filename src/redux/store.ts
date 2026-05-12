@@ -1,5 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'; 
-import { socketMiddleware } from '@/redux/middlewares/socketMiddleware';
+import { configureStore } from '@reduxjs/toolkit';  
 import { httpErrorMiddleware } from '@/redux/middlewares/httpErrorMiddleware';
 import authReducer from '@/redux/slices/authSlice';
 import httpErrorSlice from '@/redux/slices/httpErrorSlice';
@@ -12,7 +11,7 @@ export const store = configureStore({
     middleware: (getDefault) =>
         getDefault({
             serializableCheck: false,
-        }).concat(socketMiddleware, httpErrorMiddleware),
+        }).concat(httpErrorMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
