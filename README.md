@@ -3,8 +3,7 @@
 •  Run npm install.  
 •  Run the app with npm run dev.  
 •  Run unit tests with npm test.  
-  
-**Short Brief**  
+   
 **Real-Time Ticket Support Dashboard**  
 • A super smooth, responsive, smart architecture and scalable CRUD SPA Real-Time React Dashboard for managing Tickets.  
   
